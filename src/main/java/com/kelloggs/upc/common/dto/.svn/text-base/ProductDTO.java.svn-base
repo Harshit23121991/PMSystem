@@ -1,0 +1,80 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+
+
+/**
+ * The Class ProductDTO.
+ */
+public class ProductDTO implements Serializable  {
+	
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L; 
+	
+	/** The product id. */
+	private String productId = "";
+	
+	/** The product code. */
+	private String productCode = "";
+	
+	/** The product name. */
+	private String productName = "";
+
+	
+
+	/**
+	 * Gets the product code.
+	 *
+	 * @return the product code
+	 */
+	public String getProductCode() {
+		return productCode;
+	}
+
+	/**
+	 * Sets the product code.
+	 *
+	 * @param iProductCode the new product code
+	 */
+	public void setProductCode(final String iProductCode) {
+		this.productCode = iProductCode;
+	}
+
+	/**
+	 * Gets the product name.
+	 *
+	 * @return the product name
+	 */
+	public String getProductName() {
+		return productName;
+	}
+
+	/**
+	 * Sets the product name.
+	 *
+	 * @param iProductName the new product name
+	 */
+	public void setProductName(final String iProductName) {
+		this.productName = iProductName;
+	}
+
+	/**
+	 * Gets the product id.
+	 *
+	 * @return the product id
+	 */
+	public String getProductId() {
+		return productId;
+	}
+
+	/**
+	 * Sets the product id.
+	 *
+	 * @param iProductId the new product id
+	 */
+	public void setProductId(final String iProductId) {
+		this.productId = iProductId;
+	}
+
+
+}

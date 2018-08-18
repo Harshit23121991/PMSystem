@@ -1,0 +1,43 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class UserRolesDTO.
+ */
+@XmlRootElement(name = "userRoles", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("userRoles")
+public class UserRolesDTO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The user role. */
+	private List<RoleDTO> userRole;
+	
+	/**
+	 * Gets the user role.
+	 *
+	 * @return the user role
+	 */
+	public List<RoleDTO> getUserRole() {
+		return userRole;
+	}
+	
+	/**
+	 * Sets the user role.
+	 *
+	 * @param iUserRole the new user role
+	 */
+	public void setUserRole(final List<RoleDTO> iUserRole) {
+		this.userRole = iUserRole;
+	}
+}

@@ -1,0 +1,168 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class UserDTO.
+ */
+@XmlRootElement(name = "user", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("user")
+public class UserDTO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The user id. */
+	private int userID;
+	
+	/** The login id. */
+	private String loginID;
+	
+	/** The user name. */
+	private String userName;
+	
+	/** The user role id. */
+	private int userRoleID;
+	
+	/** The user role name. */
+	private String userRoleName;
+	
+	/** The user password. */
+	private String userPassword;
+	
+	/** The is enabled. */
+	private boolean isEnabled;
+
+	/**
+	 * Gets the user name.
+	 *
+	 * @return the user name
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	
+	/**
+	 * Sets the user name.
+	 *
+	 * @param iUserName the new user name
+	 */
+	public void setUserName(final String iUserName) {
+		this.userName = iUserName;
+	}
+	
+	/**
+	 * Gets the user role id.
+	 *
+	 * @return the user role id
+	 */
+	public int getUserRoleID() {
+		return userRoleID;
+	}
+	
+	/**
+	 * Sets the user role id.
+	 *
+	 * @param iUserRoleID the new user role id
+	 */
+	public void setUserRoleID(final int iUserRoleID) {
+		this.userRoleID = iUserRoleID;
+	}
+	
+	/**
+	 * Gets the user password.
+	 *
+	 * @return the user password
+	 */
+	public String getUserPassword() {
+		return userPassword;
+	}
+	
+	/**
+	 * Sets the user password.
+	 *
+	 * @param iUserPassword the new user password
+	 */
+	public void setUserPassword(final String iUserPassword) {
+		this.userPassword = iUserPassword;
+	}
+	
+	/**
+	 * Checks if is enabled.
+	 *
+	 * @return true, if is enabled
+	 */
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	
+	/**
+	 * Sets the enabled.
+	 *
+	 * @param iIsEnabled the new enabled
+	 */
+	public void setEnabled(final boolean iIsEnabled) {
+		this.isEnabled = iIsEnabled;
+	}
+	
+	/**
+	 * Gets the user id.
+	 *
+	 * @return the user id
+	 */
+	public int getUserID() {
+		return userID;
+	}
+	
+	/**
+	 * Sets the user id.
+	 *
+	 * @param iUserID the new user id
+	 */
+	public void setUserID(final int iUserID) {
+		this.userID = iUserID;
+	}
+	
+	/**
+	 * Gets the login id.
+	 *
+	 * @return the login id
+	 */
+	public String getLoginID() {
+		return loginID;
+	}
+	
+	/**
+	 * Sets the login id.
+	 *
+	 * @param iLoginID the new login id
+	 */
+	public void setLoginID(final String iLoginID) {
+		this.loginID = iLoginID;
+	}
+	
+	/**
+	 * Gets the user role name.
+	 *
+	 * @return the user role name
+	 */
+	public String getUserRoleName() {
+		return userRoleName;
+	}
+	
+	/**
+	 * Sets the user role name.
+	 *
+	 * @param iUserRoleName the new user role name
+	 */
+	public void setUserRoleName(final String iUserRoleName) {
+		this.userRoleName = iUserRoleName;
+	}
+}

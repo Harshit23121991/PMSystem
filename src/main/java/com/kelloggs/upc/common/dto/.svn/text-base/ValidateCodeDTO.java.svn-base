@@ -1,0 +1,50 @@
+package com.kelloggs.upc.common.dto;
+
+
+/**
+ * The Class ValidateCodeDTO.
+ */
+public class ValidateCodeDTO {
+	
+	/** The promotion id. */
+	private String promotionId = "";
+	
+	/** The promotion code. */
+	private String promotionCode = "";
+	
+	/**
+	 * Gets the promotion id.
+	 *
+	 * @return the promotion id
+	 */
+	public String getPromotionId() {
+		return promotionId;
+	}
+	
+	/**
+	 * Sets the promotion id.
+	 *
+	 * @param iPromotionId the new promotion id
+	 */
+	public void setPromotionId(final String iPromotionId) {
+		this.promotionId = iPromotionId;
+	}
+	
+	/**
+	 * Gets the promotion code.
+	 *
+	 * @return the promotion code
+	 */
+	public String getPromotionCode() {
+		return promotionCode;
+	}
+	
+	/**
+	 * Sets the promotion code.
+	 *
+	 * @param iPromotionCode the new promotion code
+	 */
+	public void setPromotionCode(final String iPromotionCode) {
+		this.promotionCode = iPromotionCode;
+	}
+}

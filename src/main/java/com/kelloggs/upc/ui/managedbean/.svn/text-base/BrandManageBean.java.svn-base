@@ -1,0 +1,827 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import static com.kelloggs.upc.ui.common.UPCConstants.EMPTY_STRING;
+
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.BrandDTO;
+import com.kelloggs.upc.common.dto.BrandsDTO;
+import com.kelloggs.upc.common.dto.CountryDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.delegator.BrandManagementDelegate;
+
+
+
+/**
+ * The Class BrandManageBean.
+ */
+@ManagedBean(name = "brandManageBean")
+@ViewScoped
+public class BrandManageBean extends BaseBean {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The Constant LOGGER. */
+	static final Logger LOGGER = Logger.getLogger(BrandManageBean.class);
+	
+	/** The Constant RECORD_PER_PAGE. */
+	private static final int RECORD_PER_PAGE = 20;
+	
+	/** The Constant SEARCH_ALL_BRAND. */
+	private static final String SEARCH_ALL_BRAND = "";
+
+	/** The search brand value. */
+	private String searchBrandValue = "";
+
+	/** The current brandid. */
+	private String currentBrandid = "";
+
+	/** The brands list. */
+	private List<BrandDTO> brandsList = null;
+
+	/** The current type. */
+	private String currentType = "";
+
+	/** The country value. */
+	private String countryValue = "";
+
+	/** The brc country value. */
+	private String brcCountryValue = "";
+
+	/** The country search value. */
+	private String countrySearchValue = "0";
+
+	/** The hidden brand id. */
+	private String hiddenBrandId;
+	
+	/** The hidden brand id. */
+	private String brandId;
+
+
+	/** The brand name. */
+	private String brandName;
+
+	/** The country of promotion. */
+	private String countryOfPromotion;
+
+	/** The brand value. */
+	private String brandValue = "";
+
+	/** The brand code value. */
+	private String brandCodeValue = "";
+
+	/** The brand code. */
+	private String brandCode;
+
+	/** The header. */
+	private String header;
+
+	/** The brand. */
+	private String brand = EMPTY_STRING;
+
+	/** The country id. */
+	private int countryID;
+
+	/** The message. */
+	private String message;
+
+	/** The dlthdn brand id value. */
+	private String dlthdnBrandIdValue = "";
+
+	/** The o brands dto. */
+	private BrandsDTO oBrandsDTO;
+
+	/** The brand dto. */
+	private List<BrandDTO> brandDTO = null;
+	
+	/** The a current page. */
+	private int aCurrentPage;
+
+	/** The brand id. */
+	private int brandID;
+	
+	/** The resource bundle. */
+	private static ResourceBundle resourceBundle = null;
+
+	static {
+		LOGGER.info(" Intialize once upon class load");
+		resourceBundle = FacesContext.getCurrentInstance().getApplication()
+				.getResourceBundle(FacesContext.getCurrentInstance(), "SignIn");
+	}
+
+	/**
+	 * Gets the country search value.
+	 *
+	 * @return the country search value
+	 */
+	public String getCountrySearchValue() {
+		return countrySearchValue;
+	}
+
+	/**
+	 * Sets the country search value.
+	 *
+	 * @param iCountrySearchValue the new country search value
+	 */
+	public void setCountrySearchValue(final String iCountrySearchValue) {
+		this.countrySearchValue = iCountrySearchValue;
+	}
+
+	/**
+	 * Gets the country id.
+	 *
+	 * @return the country id
+	 */
+	public int getCountryID() {
+		return countryID;
+	}
+
+	/**
+	 * Sets the country id.
+	 *
+	 * @param iCountryID the new country id
+	 */
+	public void setCountryID(final int iCountryID) {
+		this.countryID = iCountryID;
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message.
+	 *
+	 * @param iMessage the new message
+	 */
+	public void setMessage(final String iMessage) {
+		this.message = iMessage;
+	}
+
+	/**
+	 * Gets the brand id.
+	 *
+	 * @return the brand id
+	 */
+	public int getBrandID() {
+		return brandID;
+	}
+
+	/**
+	 * Sets the brand id.
+	 *
+	 * @param iBrandID the new brand id
+	 */
+	public void setBrandID(final int iBrandID) {
+		this.brandID = iBrandID;
+	}
+
+	/**
+	 * Gets the brand.
+	 *
+	 * @return the brand
+	 */
+	public String getBrand() {
+		return brand;
+	}
+
+	/**
+	 * Sets the brand.
+	 *
+	 * @param iBrand the new brand
+	 */
+	public void setBrand(final String iBrand) {
+		this.brand = iBrand;
+	}
+
+	/**
+	 * Gets the brand name.
+	 *
+	 * @return the brand name
+	 */
+	public String getBrandName() {
+		return brandName;
+	}
+
+	/**
+	 * Sets the brand name.
+	 *
+	 * @param iBrandName the new brand name
+	 */
+	public void setBrandName(final String iBrandName) {
+		this.brandName = iBrandName;
+	}
+
+	/**
+	 * Gets the header.
+	 *
+	 * @return the header
+	 */
+	public String getHeader() {
+		return header;
+	}
+
+	/**
+	 * Sets the header.
+	 *
+	 * @param iHeader the new header
+	 */
+	public void setHeader(final String iHeader) {
+		this.header = iHeader;
+	}
+
+	// private List<SelectItem> countryList = new ArrayList<SelectItem>();
+
+	
+
+	/**
+	 * Gets the current brandid.
+	 *
+	 * @return the current brandid
+	 */
+	public String getCurrentBrandid() {
+		return currentBrandid;
+	}
+
+	/**
+	 * Sets the current brandid.
+	 *
+	 * @param iCurrentBrandid the new current brandid
+	 */
+	public void setCurrentBrandid(final String iCurrentBrandid) {
+		this.currentBrandid = iCurrentBrandid;
+	}
+
+	/**
+	 * Gets the brands list.
+	 *
+	 * @return the brands list
+	 */
+	public List<BrandDTO> getBrandsList() {
+		return brandsList;
+	}
+
+	/**
+	 * Sets the brands list.
+	 *
+	 * @param iBrandsList the new brands list
+	 */
+	public void setBrandsList(final List<BrandDTO> iBrandsList) {
+		this.brandsList = iBrandsList;
+	}
+
+	/**
+	 * Gets the current type.
+	 *
+	 * @return the current type
+	 */
+	public String getCurrentType() {
+		return currentType;
+	}
+
+	/**
+	 * Sets the current type.
+	 *
+	 * @param iCurrentType the new current type
+	 */
+	public void setCurrentType(final String iCurrentType) {
+		this.currentType = iCurrentType;
+	}
+
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the country of promotion.
+	 *
+	 * @return the country of promotion
+	 */
+	public String getCountryOfPromotion() {
+		return countryOfPromotion;
+	}
+
+	/**
+	 * Sets the country of promotion.
+	 *
+	 * @param iCountryOfPromotion the new country of promotion
+	 */
+	public void setCountryOfPromotion(final String iCountryOfPromotion) {
+		this.countryOfPromotion = iCountryOfPromotion;
+	}
+
+	/**
+	 * Gets the brand value.
+	 *
+	 * @return the brand value
+	 */
+	public String getBrandValue() {
+		return brandValue;
+	}
+
+	/**
+	 * Sets the brand value.
+	 *
+	 * @param iBrandValue the new brand value
+	 */
+	public void setBrandValue(final String iBrandValue) {
+		this.brandValue = iBrandValue;
+	}
+
+	/**
+	 * Gets the brand code value.
+	 *
+	 * @return the brand code value
+	 */
+	public String getBrandCodeValue() {
+		return brandCodeValue;
+	}
+
+	/**
+	 * Sets the brand code value.
+	 *
+	 * @param iBrandCodeValue the new brand code value
+	 */
+	public void setBrandCodeValue(final String iBrandCodeValue) {
+		this.brandCodeValue = iBrandCodeValue;
+	}
+
+	/**
+	 * Gets the brand code.
+	 *
+	 * @return the brand code
+	 */
+	public String getBrandCode() {
+		return brandCode;
+	}
+
+	/**
+	 * Sets the brand code.
+	 *
+	 * @param iBrandCode the new brand code
+	 */
+	public void setBrandCode(final String iBrandCode) {
+		this.brandCode = iBrandCode;
+	}
+
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
+	public static Logger getLogger() {
+		return LOGGER;
+	}
+
+	/**
+	 * Instantiates a new brand manage bean.
+	 */
+	public BrandManageBean() {
+
+	}
+
+	/* (non-Javadoc)
+	 * @see com.kelloggs.upc.ui.managedbean.BaseBean#init()
+	 */
+	@PostConstruct
+	public void init() {
+
+		searchBrands();
+	}
+
+	// Create new brand(overlay)
+	/**
+	 * Creates the new brand.
+	 */
+	public void createNewBrand() {
+
+		BrandManagementDelegate brandManagementDelegate = null;
+		final String aCountryOfPromotion = getCountryValue();
+		final String aBrandName = getBrandValue();
+		final String aBrandCode = getBrandCodeValue();
+		BrandDTO iBrandDTO = null;
+		BrandDTO oBrandDTO = null;
+		CountryDTO icountryDTO = null;
+		if (StringUtils.isNotBlank(aCountryOfPromotion)
+				&& StringUtils.isNotBlank(aBrandName)
+				&& StringUtils.isNotBlank(aBrandCode)) {
+			iBrandDTO = new BrandDTO();
+			icountryDTO = new CountryDTO();
+			// iBrandDTO.setCountryID(Integer.parseInt(countryOfPromotion));
+			icountryDTO.setCountryName(aCountryOfPromotion);
+			iBrandDTO.setCountry(icountryDTO);
+			iBrandDTO.setBrandName(aBrandName);
+			iBrandDTO.setBrandCode(aBrandCode);
+			brandManagementDelegate = new BrandManagementDelegate();
+			try {
+				oBrandDTO = brandManagementDelegate.createBrand(iBrandDTO);
+				if (oBrandDTO != null
+						&& StringUtils.isNotEmpty(oBrandDTO.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEBRAND_CREATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage(
+							"brandmanagementForm:brandCreateMessage", fm);
+				}
+				searchBrands();
+			} catch (UPCApplicationException e) {
+				LOGGER.error(" Error Occured in creating brand "
+						+ e.getMessage());
+				FacesMessage fm = new FacesMessage(
+						errorResourceBundle.getString(e.getErrorKey()
+								+ ".error"));
+				fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+				FacesContext.getCurrentInstance().addMessage(
+						"pageError_brandCreateForm", fm);
+			}
+		}
+	}
+
+	// populating date while updating
+	/**
+	 * Populate existing brands.
+	 *
+	 * @param iBrandDTO the i brand dto
+	 */
+	public void populateExistingBrands(final BrandDTO iBrandDTO) {
+		BrandDTO aFinalBrandDTO = iBrandDTO;
+		int position = 0;
+		for (BrandDTO aBrandDTO : brandsList) {
+			if (aBrandDTO.getBrandID() == iBrandDTO.getBrandID()) {
+				break;
+			} else {
+				position++;
+			}
+		}
+		if (aCurrentPage > 1) {
+			aFinalBrandDTO = brandsList.get((RECORD_PER_PAGE * (aCurrentPage - 1))
+					+ position); 
+		}
+		setCountryValue(String.valueOf(aFinalBrandDTO.getCountry()
+				.getCountryID()));
+		setBrandValue(aFinalBrandDTO.getBrandName());
+		setBrandCodeValue(aFinalBrandDTO.getBrandCode());
+		//setHiddenBrandId(String.valueOf(aFinalBrandDTO.getBrandID()));
+		setBrandId(String.valueOf(aFinalBrandDTO.getBrandID()));
+	}
+
+	/**
+	 * Gets the brc country value.
+	 *
+	 * @return the brc country value
+	 */
+	public String getBrcCountryValue() {
+		return brcCountryValue;
+	}
+
+	/**
+	 * Sets the brc country value.
+	 *
+	 * @param iBrcCountryValue the new brc country value
+	 */
+	public void setBrcCountryValue(final String iBrcCountryValue) {
+		this.brcCountryValue = iBrcCountryValue;
+	}
+
+	// search country and name based brands
+	/**
+	 * Search brands name list.
+	 */
+	public void searchBrandsNameList() {
+
+		final String aCountryIdStr = getCountrySearchValue();
+		final String aBrandName = getBrand();
+		BrandManagementDelegate brandManagementDelegate = null;
+		BrandDTO iBrandDTO = null;
+		BrandsDTO aBrandsDTO = null;
+		try {
+			
+			brandManagementDelegate = new BrandManagementDelegate();
+			iBrandDTO = new BrandDTO();
+			iBrandDTO.setBrandName(aBrandName);
+			iBrandDTO.setCountryID(Integer.parseInt(aCountryIdStr));
+			aBrandsDTO = brandManagementDelegate.searchBrand(iBrandDTO);
+			setBrandsList(aBrandsDTO.getaBrands());
+			
+		} catch (UPCApplicationException e) {
+			LOGGER.error(" Error Occured in Updating brand " + e.getMessage());
+			if (brandsList != null) {
+				brandsList.clear();
+			}
+			FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e
+					.getErrorKey() + ".error"));
+			fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(
+					"brandmanagementForm:errorMessage_brandmanagementForm", fm);
+		}
+		
+	}
+
+	/**
+	 * Gets the o brands dto.
+	 *
+	 * @return the o brands dto
+	 */
+	public BrandsDTO getoBrandsDTO() {
+		return oBrandsDTO;
+	}
+
+	/**
+	 * Sets the o brands dto.
+	 *
+	 * @param iBrandsDTO the new o brands dto
+	 */
+	public void setoBrandsDTO(final BrandsDTO iBrandsDTO) {
+		this.oBrandsDTO = iBrandsDTO;
+	}
+
+	/**
+	 * Gets the i brand dto.
+	 *
+	 * @return the i brand dto
+	 */
+	public List<BrandDTO> getiBrandDTO() {
+		return brandDTO;
+	}
+
+	/**
+	 * Sets the i brand dto.
+	 *
+	 * @param iBrandDTO the new i brand dto
+	 */
+	public void setiBrandDTO(final List<BrandDTO> iBrandDTO) {
+		this.brandDTO = iBrandDTO;
+	}
+
+	// update data (overlay)
+	/**
+	 * Update existing brand.
+	 */
+	public void updateExistingBrand() {
+
+		BrandManagementDelegate brandManagementDelegate = null;
+		try {
+			final String aCountryOfPromotion = getCountryValue();
+			final String aBrandName = getBrandValue();
+			final String aBrandCode = getBrandCodeValue();
+			final String brandId = getHiddenBrandId();
+
+			BrandDTO iBrandDTO = null;
+			CountryDTO icountryDTO = null;
+			BrandDTO oBrandDTO = null;
+			if (StringUtils.isNotBlank(aCountryOfPromotion)
+					&& StringUtils.isNotBlank(aBrandName)
+					&& StringUtils.isNotBlank(aBrandCode)
+					&& StringUtils.isNotBlank(brandId)) {
+				iBrandDTO = new BrandDTO();
+				icountryDTO = new CountryDTO();
+				icountryDTO.setCountryID(Integer.parseInt(aCountryOfPromotion));
+				// iBrandDTO.setCountryID(Integer.parseInt(countryOfPromotion));
+				// icountryDTO.setCountryName(countryOfPromotion);
+				iBrandDTO.setCountry(icountryDTO);
+				iBrandDTO.setBrandName(aBrandName);
+				iBrandDTO.setBrandCode(aBrandCode);
+				iBrandDTO.setBrandID(Integer.parseInt(brandId));
+				brandManagementDelegate = new BrandManagementDelegate();
+				oBrandDTO = brandManagementDelegate.updateBrand(iBrandDTO);
+				if (oBrandDTO != null
+						&& StringUtils.isNotEmpty(oBrandDTO.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEBRAND_UPDATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage(
+							"brandmanagementForm:brandUpdateMessage", fm);
+				}
+				searchBrands();
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.error(" Error Occured in Updating brand " + e.getMessage());
+			FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e
+					.getErrorKey() + ".error"));
+			fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(
+					"pageError_updateBrandForm", fm);
+		}
+	}
+
+	
+
+	// List of brands display (by default)
+	/**
+	 * Search brands.
+	 */
+	public void searchBrands() {
+
+		final String aCountryIdStr = getCountrySearchValue();
+		final String aBrandName = getBrand();
+		BrandManagementDelegate brandManagementDelegate = null;
+		BrandDTO iBrandDTO = null;
+		BrandsDTO aBrandsDTO = null;
+		try {
+			
+			brandManagementDelegate = new BrandManagementDelegate();
+			iBrandDTO = new BrandDTO();
+			iBrandDTO.setBrandName(aBrandName);
+			iBrandDTO.setCountryID(Integer.parseInt(aCountryIdStr));
+			aBrandsDTO = brandManagementDelegate.searchBrand(iBrandDTO);
+			setBrandsList(aBrandsDTO.getaBrands());
+			
+		} catch (UPCApplicationException e) {
+			LOGGER.error(" Error Occured in Updating brand " + e.getMessage());
+			if (brandsList != null) {
+			brandsList.clear();
+			}
+			FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e.getErrorKey() + ".error"));
+			fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("brandmanagementForm:errorMessage_brandmanagementForm", fm);
+		}
+	}
+
+	// Delete brand(overlay)
+	/**
+	 * Delete brand.
+	 */
+	public void deleteBrand() {
+		BrandManagementDelegate brandManagementDelegate = null;
+		try {
+			System.out.println(" DeleteBrand ");
+			brandManagementDelegate = null;
+			// final String brandIdValue = getDlthdnBrandIdValue();
+
+			final String aCountryOfPromotion = getCountryValue();
+			final String aBrandName = getBrandValue();
+			final String aBrandCode = getBrandCodeValue();
+			final String brandId = getBrandId();
+
+			final FacesContext context = FacesContext.getCurrentInstance();
+			HttpServletRequest request = (HttpServletRequest) context
+					.getExternalContext().getRequest();
+			HttpSession httpSession = request.getSession();
+			String userid = "";
+			if (null != httpSession.getAttribute("userid")) {
+				userid = httpSession.getAttribute("userid").toString();
+			}
+
+			BrandDTO iBrandDTO = null;
+			BrandDTO oBrandDTO = null;
+			CountryDTO icountryDTO = null;
+
+			if ( StringUtils.isNotBlank(brandId) && !brandId.equals("0")
+					&& StringUtils.isNotBlank(userid)) {
+
+				iBrandDTO = new BrandDTO();
+				icountryDTO = new CountryDTO();
+
+				// iBrandDTO.setCountryID(Integer.parseInt(countryOfPromotion));
+				icountryDTO.setCountryName(aCountryOfPromotion);
+				iBrandDTO.setCountry(icountryDTO);
+				iBrandDTO.setBrandName(aBrandName);
+				iBrandDTO.setBrandCode(aBrandCode);
+				iBrandDTO.setBrandID(Integer.parseInt(brandId));
+
+				brandManagementDelegate = new BrandManagementDelegate();
+
+				oBrandDTO = brandManagementDelegate.deleteBrandList(iBrandDTO,
+						Integer.parseInt(userid));
+				if (oBrandDTO != null
+						&& StringUtils.isNotEmpty(oBrandDTO.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEBRAND_DELETE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage(
+							"brandmanagementForm:brandDeleteMessage", fm);
+				}
+				searchBrands();
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.error(" Error Occured in Updating brand " + e.getMessage());
+			FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e
+					.getErrorKey() + ".error"));
+			fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(
+					"pageError_updateBrandForm", fm);
+		}
+	}
+
+	/**
+	 * Gets the search all brand.
+	 *
+	 * @return the search all brand
+	 */
+	public static String getSearchAllBrand() {
+		return SEARCH_ALL_BRAND;
+	}
+
+	/**
+	 * Gets the search brand value.
+	 *
+	 * @return the search brand value
+	 */
+	public String getSearchBrandValue() {
+		return searchBrandValue;
+	}
+
+	/**
+	 * Sets the search brand value.
+	 *
+	 * @param iSearchBrandValue the new search brand value
+	 */
+	public void setSearchBrandValue(final String iSearchBrandValue) {
+		this.searchBrandValue = iSearchBrandValue;
+	}
+
+	/**
+	 * Gets the hidden brand id.
+	 *
+	 * @return the hidden brand id
+	 */
+	public String getHiddenBrandId() {
+		return hiddenBrandId;
+	}
+
+	/**
+	 * Sets the hidden brand id.
+	 *
+	 * @param iHiddenBrandId the new hidden brand id
+	 */
+	public void setHiddenBrandId(final String iHiddenBrandId) {
+		this.hiddenBrandId = iHiddenBrandId;
+	}
+
+	/**
+	 * Gets the dlthdn brand id value.
+	 *
+	 * @return the dlthdn brand id value
+	 */
+	public String getDlthdnBrandIdValue() {
+		return dlthdnBrandIdValue;
+	}
+
+	/**
+	 * Sets the dlthdn brand id value.
+	 *
+	 * @param iDlthdnBrandIdValue the new dlthdn brand id value
+	 */
+	public void setDlthdnBrandIdValue(final String iDlthdnBrandIdValue) {
+		this.dlthdnBrandIdValue = iDlthdnBrandIdValue;
+	}
+
+	/**
+	 * Gets the a current page.
+	 *
+	 * @return the a current page
+	 */
+	public int getaCurrentPage() {
+		return aCurrentPage;
+	}
+
+	/**
+	 * Sets the a current page.
+	 *
+	 * @param iCurrentPage the new a current page
+	 */
+	public void setaCurrentPage(final int iCurrentPage) {
+		this.aCurrentPage = iCurrentPage;
+	}
+
+	public String getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
+	}
+
+}

@@ -1,0 +1,115 @@
+package com.kelloggs.upc.ui.common;
+
+import java.io.IOException;
+
+import javax.faces.application.ViewExpiredException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.ui.managedbean.SignInBean;
+
+/**
+ * The Class RestrictPageFilter.
+ */
+public class RestrictPageFilter implements Filter {
+	
+	/** The Constant LOGGER. */
+	static final Logger LOGGER = Logger.getLogger(RestrictPageFilter.class);
+
+	/** The Constant LOGIN_PAGE. */
+	private static final String LOGIN_PAGE = "faces/pages/SignIn.xhtml";
+	
+	/** The Constant LOGIN_OUT. */
+	private static final String LOGIN_OUT = "faces/pages/Logout.xhtml";
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
+	public void init(final FilterConfig filterConfig) throws ServletException {
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
+	public void doFilter(final ServletRequest iRequest, final ServletResponse iResponse, final FilterChain iFilterChain) throws IOException, ServletException {
+		
+		HttpServletRequest requestHttp = (HttpServletRequest) iRequest;
+		HttpServletResponse responseHttp = (HttpServletResponse) iResponse;
+		
+		try {
+			
+		if ((iRequest instanceof HttpServletRequest) && (iResponse instanceof HttpServletResponse)) {
+			
+			responseHttp.setHeader("X-UA-Compatible", "IE=EmulateIE8");
+			responseHttp.setContentType("charset=UTF-8");
+			String requestPath1 = ((HttpServletRequest) iRequest).getRequestURI();
+			
+			if (requestPath1.contains(LOGIN_OUT)) {
+
+				LOGGER.info("requestPath1: " + requestPath1);
+				// requestHttp.getSession().invalidate();
+				String timeoutUrl = requestHttp.getContextPath() + "/" + LOGIN_PAGE;
+				LOGGER.info("timeoutUrl" + timeoutUrl);
+				responseHttp.sendRedirect(timeoutUrl);
+
+			} else {
+
+				if (checkResource(requestHttp)) {
+					if (!checkSession(requestHttp)) {
+
+						//String timeoutUrl = requestHttp.getContextPath() + "/" + LOGIN_PAGE;
+						//responseHttp.sendRedirect(timeoutUrl);
+						throw new RuntimeException(" View Expired "); 
+					}
+				}
+				iFilterChain.doFilter(iRequest, iResponse);
+			}
+		}
+		
+	} catch (ViewExpiredException ex) {
+			
+		String timeoutUrl = requestHttp.getContextPath() + "/" + LOGIN_PAGE;
+		LOGGER.info("timeoutUrl" + timeoutUrl);
+		responseHttp.sendRedirect(timeoutUrl);
+		
+		}
+		
+	}
+
+	/**
+	 * Check resource.
+	 *
+	 * @param iRequest the i request
+	 * @return true, if successful
+	 */
+	private boolean checkResource(final HttpServletRequest iRequest) {
+		String requestPath = iRequest.getRequestURI();
+		return (!requestPath.contains(LOGIN_PAGE));
+	}
+
+	/**
+	 * Check session.
+	 *
+	 * @param iRequest the i request
+	 * @return true, if successful
+	 */
+	private boolean checkSession(final HttpServletRequest iRequest) {
+		SignInBean signInBean = (SignInBean) iRequest.getSession().getAttribute("SignInBean");
+		return signInBean != null && signInBean.getUserName() != null;
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.Filter#destroy()
+	 */
+	public void destroy() {
+	}
+
+}

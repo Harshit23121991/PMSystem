@@ -1,0 +1,87 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+/**
+ * The Class CountryDTO.
+ */
+@XmlRootElement(name = "country", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("country")
+public class CountryDTO implements Serializable {
+	// =================================================
+	// Class Variables
+	// =================================================
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 2818020043216551189L;
+	// =================================================
+	// Instance Variables
+	// =================================================
+	/** The country id. */
+	private int countryID;
+
+	/** The country name. */
+	private String countryName;
+
+	/** The country code. */
+	private String countryCode;
+
+	
+	/**
+	 * Gets the country code.
+	 *
+	 * @return the country code
+	 */
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	/**
+	 * Sets the country code.
+	 *
+	 * @param icountryCode the new country code
+	 */
+	public void setCountryCode(final String icountryCode) {
+		this.countryCode = icountryCode;
+	}
+
+	/**
+	 * Gets the country id.
+	 *
+	 * @return the country id
+	 */
+	public int getCountryID() {
+		return countryID;
+	}
+
+	/**
+	 * Sets the country id.
+	 *
+	 * @param iCountryID the new country id
+	 */
+	public void setCountryID(final int iCountryID) {
+		this.countryID = iCountryID;
+	}
+
+	/**
+	 * Gets the country name.
+	 *
+	 * @return the country name
+	 */
+	public String getCountryName() {
+		return countryName;
+	}
+
+	/**
+	 * Sets the country name.
+	 *
+	 * @param iCountryName the new country name
+	 */
+	public void setCountryName(final String iCountryName) {
+		this.countryName = iCountryName;
+	}
+
+}

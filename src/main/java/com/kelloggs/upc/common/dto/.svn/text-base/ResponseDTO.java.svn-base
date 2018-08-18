@@ -1,0 +1,64 @@
+/**
+ * 
+ */
+package com.kelloggs.upc.common.dto;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * @author aku148
+ *
+ */
+@XmlRootElement(name = "response", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("response")
+public class ResponseDTO {
+	
+	
+	/** The status. */
+	private String status;
+	
+	/** The message. */
+	private String message;
+
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets the status.
+	 *
+	 * @param iStatus the new status
+	 */
+	public void setStatus(final String iStatus) {
+		this.status = iStatus;
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message.
+	 *
+	 * @param iMessage the new message
+	 */
+	public void setMessage(final String iMessage) {
+		this.message = iMessage;
+	}
+	
+	
+
+}

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring" xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.0.xsd
+        http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd
+        http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd"
+	default-autowire="byName" default-lazy-init="true">
+
+	<!-- Component : Controllers, Service, DAO -->
+	<context:component-scan base-package="com.kelloggs.upc" />
+
+	<configurator:settings runningMode="local" />
+
+	<aop:aspectj-autoproxy />
+
+	<!-- Aspect -->
+	<!-- <bean id="logAspect" class="com.kelloggs.upc.log.LoggingAspect" /> -->
+
+	<!-- Service Filters -->
+	<bean id="upcAuthenticationFilter" class="com.kelloggs.upc.service.filter.AuthenticationFilter" />
+
+	<!-- Dozer Mapper -->
+	<bean id="mapper" class="com.kelloggs.upc.common.utils.UPCDozerBeanMapper">
+		<property name="mappingFiles">
+			<list>
+				<value>bean-mappings.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- To enable @RequestMapping process on type level and method level -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean id="mappingJacksonHttMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+
+
+	<!-- JAXB Marshalling classes -->
+	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="classesToBeBound">
+			<list>
+				<value>com.kelloggs.upc.common.dto.CountryDTO</value>
+				<value>com.kelloggs.upc.common.dto.CountriesDTO</value>
+				<value>com.kelloggs.upc.common.dto.BrandDTO</value>
+				<value>com.kelloggs.upc.common.dto.BrandsDTO</value>
+				<value>com.kelloggs.upc.common.dto.UserDTO</value>
+				<value>com.kelloggs.upc.common.dto.UserDTOs</value>
+				<value>com.kelloggs.upc.common.dto.UserRolesDTO</value>
+				<value>com.kelloggs.upc.common.dto.PromotionDTO</value>
+				<value>com.kelloggs.upc.common.dto.PromotionsDTO</value>
+				<value>com.kelloggs.upc.common.dto.PackDTO</value>
+				<value>com.kelloggs.upc.common.dto.PacksDTO</value>
+				<value>com.kelloggs.upc.common.dto.BatchDTO</value>
+				<value>com.kelloggs.upc.common.dto.BatchsDTO</value>
+				<value>com.kelloggs.upc.common.dto.ExceptionDTO</value>
+				<value>com.kelloggs.upc.common.dto.ResponseDTO</value>
+				<value>com.kelloggs.upc.common.dto.AlternateCodeDTO</value>
+				<value>com.kelloggs.upc.common.dto.RedemptionInfoDTO</value>
+				<value>com.kelloggs.upc.common.dto.RedemptionsInfoDTO</value>
+				<value>com.kelloggs.upc.common.dto.RedeemCodeDTO</value>
+				<value>com.kelloggs.upc.common.dto.RedeemCodeResponseDTO</value>
+				<value>com.kelloggs.upc.common.dto.ValidateCodeDTO</value>
+				<value>com.kelloggs.upc.common.dto.CustomerRedemptionsDTO</value>
+				<value>com.kelloggs.upc.common.dto.ProductTypeDTO</value>
+				<value>com.kelloggs.upc.common.dto.ProductTypesDTO</value>
+				<value>com.kelloggs.upc.common.dto.MenuDTO</value>
+				<value>com.kelloggs.upc.common.dto.RoleDTO</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Content Negotiation View Resolvers -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="mediaTypes">
+			<map>
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="application/xml" />
+			</map>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<constructor-arg ref="jaxbMarshaller" />
+				</bean>
+			</list>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+			</list>
+		</property>
+		<!-- Change the defaultContentType if you want the default view to be something different from text/plain -->
+		<property name="defaultContentType" ref="textPlainMediaType" />
+		<property name="ignoreAcceptHeader" value="false" />
+	</bean>
+
+	<!-- Media Types -->
+	<bean id="jsonMediaType" class="org.springframework.http.MediaType">
+		<constructor-arg value="application" />
+		<constructor-arg value="json" />
+	</bean>
+	<bean id="textPlainMediaType" class="org.springframework.http.MediaType">
+		<constructor-arg value="text" />
+		<constructor-arg value="plain" />
+	</bean>
+	<bean id="jdbcDao" class="com.kelloggs.upc.service.dao.JdbcDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<!-- JDBC Template -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="sbDataSource" />
+	</bean>
+
+	<!-- Exception Resolver -->
+	<bean id="UPCExceptionResolver" class="com.kelloggs.upc.service.resolver.UPCExceptionResolver">
+		<property name="order">
+			<value>2</value>
+		</property>
+	</bean>
+	<bean id="ResponseExceptionResolver" class="org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver">
+		<property name="order">
+			<value>1</value>
+		</property>
+	</bean>
+</beans>

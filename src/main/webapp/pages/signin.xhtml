@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	 <h:head>
+	 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<title>Login</title>
+		<link rel="stylesheet" href="../PMSystem/css/global.css" media="screen" />
+		<script type="text/javascript" src="../PMSystem/js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="../PMSystem/js/global.js"></script>
+		
+	</h:head>
+	
+	
+	<h:body class="loginPg">
+		<div class="loginWrapepr">
+			<div class="loginContainer">
+				<img class="logo" src="../PMSystem/img/logo_cluster.png" alt="Cluster" /> 
+             <img src="../PMSystem/img/login_headline.png" alt="Unique pack code generator" />
+
+				<div class="loginBox">
+					<h2>Login</h2>
+			
+		
+			<h:form id="loginForm">
+			
+			
+			
+				<p><h:outputText value="#{SignIn.mandatoryfield}"/></p>
+				<h:inputHidden id="temp"  value="hiddenValue"/>
+				<div class="row padLeft20px"><h:message for="temp" id="tempError"  /></div>	
+				<span id="errMsg" class="hidden"></span>
+				
+				
+				<div id="userName"  class="row">
+					<label><h:outputText value="#{SignIn.userName}"/></label> 
+					<h:inputText id="userName"  onkeypress="return captureClick(event,'loginBtn');"  value="#{SignInBean.userName}" required="true" label="#{SignIn.UserName}"/><br/>
+					<span id="uErrMsg" style="display: none;">UserID is required</span>
+				</div>
+				
+			
+				
+				<div id="password"  class="row">
+					<label><h:outputText value="#{SignIn.password}" /></label>  
+					<h:inputSecret id="password"  onkeypress="return captureClick(event,'loginBtn');"  value="#{SignInBean.password}" required="true" label="#{SignIn.PassWord}"/><br/>  
+					<span id="pErrMsg" style="display: none;">Password is required</span>
+					
+				</div>
+			
+
+				
+
+				<h:commandLink styleClass="rounded loginBtn"  onclick="return validateSignInForm()"  action="#{SignInBean.signInUser}" ><span><h:outputText value="#{SignIn.button_text}" ></h:outputText></span>
+
+				
+				</h:commandLink>
+				
+				
+						
+			</h:form>
+				
+		
+		</div>
+		
+		</div>
+		</div>
+	</h:body>
+	</html>

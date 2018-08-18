@@ -1,0 +1,330 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.PackValidatorDTO;
+import com.kelloggs.upc.common.dto.PromotionDTO;
+import com.kelloggs.upc.common.dto.PromotionsDTO;
+import com.kelloggs.upc.common.dto.ValidateCodeDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.delegator.GenerateCodeDelegator;
+import com.kelloggs.upc.ui.delegator.ValidateCodeDelegator;
+
+/**
+ * The Class ValidateCodeBean.
+ */
+@ManagedBean(name = "validatecodeBean")
+@ViewScoped
+public class ValidateCodeBean extends BaseBean {
+
+	/*
+	 * @ManagedProperty(value = "#{ApplicationBean}") private ApplicationBean
+	 * applicationBean;
+	 */
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The Constant LOGGER. */
+	static final Logger LOGGER = Logger.getLogger(ValidateCodeBean.class);
+	
+	/** The country value. */
+	private String countryValue = "";
+	
+	/** The promotion value. */
+	private String promotionValue = "";
+	
+	/** The promotion code value. */
+	private String promotionCodeValue = "";
+	
+	/** The generated alternate code. */
+	private String generatedAlternateCode = "";
+	
+	/** The pack validator dto. */
+	private PackValidatorDTO packValidatorDTO = null;
+	
+	/** The promotions list. */
+	private List<SelectItem> promotionsList = new ArrayList<SelectItem>();
+	
+
+
+	static {
+		LOGGER.info(" Intialize once upon class load");
+	}
+
+	/**
+	 * Instantiates a new validate code bean.
+	 */
+	public ValidateCodeBean() {
+		LOGGER.debug(" Entered ValidateCodeBean constructor");
+	}
+
+	
+	/**
+	 * Country value changed.
+	 *
+	 * @param event the event
+	 */
+	public void countryValueChanged(final ValueChangeEvent event) {
+		LOGGER.debug(" Entered countryValueChanged service");
+		try {
+			setPackValidatorDTO(null);
+			promotionsList.clear();
+			if (null != event.getNewValue()) {
+				String countryId = (String) event.getNewValue();
+				if (StringUtils.isNotBlank(countryId)) {
+					PromotionsDTO promotionsDTO = GenerateCodeDelegator
+							.getPromotions(countryId);
+
+					List<PromotionDTO> promotionDTO = promotionsDTO
+							.getaPromotions();
+
+					
+					if (null != promotionDTO) {
+						for (int i = 0; i < promotionDTO.size(); i++) {
+							SelectItem item = new SelectItem(promotionDTO
+									.get(i).getPromotionID(), promotionDTO.get(
+									i).getPromotionName());
+							promotionsList.add(item);
+						}
+					}
+				} else {
+					LOGGER.info(" Not able to fetch Promotion data ,country Id is "
+							+ countryId);
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(
+					errorResourceBundle.getString(aUpcApplicationException
+							.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(
+					"userManagement:system", aFacesMessage);
+		}
+
+		LOGGER.debug(" Existed from countryValueChanged service");
+	}
+
+	
+	/**
+	 * Promotion value changed.
+	 *
+	 * @param event the event
+	 */
+	public void promotionValueChanged(final ValueChangeEvent event) {
+		LOGGER.debug(" Entered promotionValueChanged service");
+		//Clear older code validation details 
+		setPackValidatorDTO(null);
+		setPromotionCodeValue("");
+	}
+		
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the promotion value.
+	 *
+	 * @return the promotion value
+	 */
+	public String getPromotionValue() {
+		return promotionValue;
+	}
+
+	/**
+	 * Sets the promotion value.
+	 *
+	 * @param iPromotionValue the new promotion value
+	 */
+	public void setPromotionValue(final String iPromotionValue) {
+		this.promotionValue = iPromotionValue;
+	}
+
+	
+
+	/**
+	 * Gets the promotions list.
+	 *
+	 * @return the promotions list
+	 */
+	public List<SelectItem> getPromotionsList() {
+		return promotionsList;
+	}
+
+	/**
+	 * Sets the promotions list.
+	 *
+	 * @param iPromotionsList the new promotions list
+	 */
+	public void setPromotionsList(final List<SelectItem> iPromotionsList) {
+		this.promotionsList = iPromotionsList;
+	}
+
+	/**
+	 * Gets the promotion code value.
+	 *
+	 * @return the promotion code value
+	 */
+	public String getPromotionCodeValue() {
+		return promotionCodeValue;
+	}
+
+	/**
+	 * Sets the promotion code value.
+	 *
+	 * @param iPromotionCodeValue the new promotion code value
+	 */
+	public void setPromotionCodeValue(final String iPromotionCodeValue) {
+		this.promotionCodeValue = iPromotionCodeValue;
+	}
+
+	/**
+	 * Generate alernate code.
+	 */
+	public void generateAlernateCode() {
+
+	}
+
+	/**
+	 * Validate code.
+	 */
+	public void validateCode() {
+		LOGGER.debug(" Entered validateCode service");
+		setGeneratedAlternateCode(UPCConstants.EMPTY_STRING);
+		ValidateCodeDelegator validateCodeDelegator = null;
+		final String promotionId = getPromotionValue();
+		final String promotioncodeValue = getPromotionCodeValue();
+		if (StringUtils.isNotBlank(promotionId)
+				&& StringUtils.isNotBlank(promotioncodeValue)) {
+
+			ValidateCodeDTO validateCodeDTO = new ValidateCodeDTO();
+			validateCodeDTO.setPromotionId(promotionId);
+			validateCodeDTO.setPromotionCode(promotioncodeValue);
+			validateCodeDelegator = new ValidateCodeDelegator();
+			PackValidatorDTO apackValidatorDTO = new PackValidatorDTO();
+			apackValidatorDTO.setRedemStatus(-1);
+			try {
+				apackValidatorDTO = validateCodeDelegator
+						.getValidateCode(validateCodeDTO);
+			} catch (UPCApplicationException e) {
+				if (!"UPC_008".equalsIgnoreCase(e.getErrorKey())) {
+					FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e.getErrorKey() + ".error"));
+					fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+					FacesContext.getCurrentInstance().addMessage("validateCodeForm:systemError", fm);
+				}
+			}
+			setPackValidatorDTO(apackValidatorDTO);
+
+		}
+		LOGGER.debug(" Existed from validateCode service");
+	}
+
+	/**
+	 * Creates the alternate code.
+	 */
+	public void createAlternateCode() {
+		LOGGER.debug(" Entered createAlternateCode service");
+		ValidateCodeDelegator validateCodeDelegator = null;
+		final String promotionId = getPromotionValue();
+		final String promotioncodeValue = getPromotionCodeValue();
+		if (StringUtils.isNotBlank(promotionId)
+				&& StringUtils.isNotBlank(promotioncodeValue)) {
+
+			ValidateCodeDTO validateCodeDTO = new ValidateCodeDTO();
+			validateCodeDTO.setPromotionId(promotionId);
+			validateCodeDTO.setPromotionCode(promotioncodeValue);
+			validateCodeDelegator = new ValidateCodeDelegator();
+			String alternateCode = null;
+			try {
+				alternateCode = validateCodeDelegator
+						.alternateCode(validateCodeDTO);
+			} catch (UPCApplicationException e) {
+				FacesMessage fm = new FacesMessage(
+						errorResourceBundle.getString(e.getErrorKey()
+								+ ".error"));
+				fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+				FacesContext.getCurrentInstance().addMessage(
+						"validateCodeForm:systemError", fm);
+			}
+			setGeneratedAlternateCode(alternateCode);
+
+		}
+		LOGGER.debug(" Existed from createAlternateCode service");
+	}
+
+	/**
+	 * Gets the pack validator dto.
+	 *
+	 * @return the pack validator dto
+	 */
+	public PackValidatorDTO getPackValidatorDTO() {
+		return packValidatorDTO;
+	}
+
+	/**
+	 * Sets the pack validator dto.
+	 *
+	 * @param iPackValidatorDTO the new pack validator dto
+	 */
+	public void setPackValidatorDTO(final PackValidatorDTO iPackValidatorDTO) {
+		this.packValidatorDTO = iPackValidatorDTO;
+	}
+
+	/**
+	 * Checks if is package detail.
+	 *
+	 * @return true, if is package detail
+	 */
+	public boolean isPackageDetail() {
+		return (packValidatorDTO != null);
+	}
+
+
+
+	/**
+	 * Gets the generated alternate code.
+	 *
+	 * @return the generated alternate code
+	 */
+	public String getGeneratedAlternateCode() {
+		return generatedAlternateCode;
+	}
+
+	/**
+	 * Sets the generated alternate code.
+	 *
+	 * @param iGeneratedAlternateCode the new generated alternate code
+	 */
+	public void setGeneratedAlternateCode(final String iGeneratedAlternateCode) {
+		this.generatedAlternateCode = iGeneratedAlternateCode;
+	}
+
+}

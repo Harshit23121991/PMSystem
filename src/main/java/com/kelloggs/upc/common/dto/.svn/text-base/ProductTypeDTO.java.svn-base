@@ -1,0 +1,63 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class ProductTypeDTO.
+ */
+@XmlRootElement(name = "ProductType", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("ProductType")
+public class ProductTypeDTO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The product type id. */
+	private int productTypeId;
+	
+	/** The product type name. */
+	private String productTypeName;
+	
+	/**
+	 * Gets the product type id.
+	 *
+	 * @return the product type id
+	 */
+	public int getProductTypeId() {
+		return productTypeId;
+	}
+	
+	/**
+	 * Sets the product type id.
+	 *
+	 * @param iProductTypeId the new product type id
+	 */
+	public void setProductTypeId(final int iProductTypeId) {
+		this.productTypeId = iProductTypeId;
+	}
+	
+	/**
+	 * Gets the product type name.
+	 *
+	 * @return the product type name
+	 */
+	public String getProductTypeName() {
+		return productTypeName;
+	}
+	
+	/**
+	 * Sets the product type name.
+	 *
+	 * @param iProductTypeName the new product type name
+	 */
+	public void setProductTypeName(final String iProductTypeName) {
+		this.productTypeName = iProductTypeName;
+	}
+}

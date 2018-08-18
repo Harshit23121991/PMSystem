@@ -1,0 +1,42 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+
+
+/**
+ * The Class PacksDTO.
+ */
+@XmlRootElement(name = "packs", namespace = "com.kelloggs.upc.common.dto")
+//@XStreamAlias("packs")
+public class PacksDTO {
+	
+	
+	/** The a packs. */
+	private List<PackDTO> aPacks;
+	
+	/**
+	 * Gets the a packs.
+	 *
+	 * @return the a packs
+	 */
+	@XmlElement(name = "Pack")
+	public List<PackDTO> getaPacks() {
+		return aPacks;
+	}
+
+	/**
+	 * Sets the a packs.
+	 *
+	 * @param iPacks the new a packs
+	 */
+	public void setaPacks(final List<PackDTO> iPacks) {
+		this.aPacks = iPacks;
+	}	
+	
+	
+}

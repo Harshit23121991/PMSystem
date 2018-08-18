@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/scm/kelloggs_unique_pack_code/!svn/ver/1488/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean
+END
+BaseBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/scm/kelloggs_unique_pack_code/!svn/ver/1418/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/BaseBean.java
+END
+ReportBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/scm/kelloggs_unique_pack_code/!svn/ver/1431/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/ReportBean.java
+END
+RedemptionInfoBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/scm/kelloggs_unique_pack_code/!svn/ver/1418/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/RedemptionInfoBean.java
+END
+ValidateCodeBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/scm/kelloggs_unique_pack_code/!svn/ver/1418/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/ValidateCodeBean.java
+END
+GenerateCodeBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/scm/kelloggs_unique_pack_code/!svn/ver/1332/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/GenerateCodeBean.java
+END
+PackCodeSetBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/scm/kelloggs_unique_pack_code/!svn/ver/1488/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/PackCodeSetBean.java
+END
+DownloadVO.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/scm/kelloggs_unique_pack_code/!svn/ver/1318/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/DownloadVO.java
+END
+SignInBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/scm/kelloggs_unique_pack_code/!svn/ver/1354/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/SignInBean.java
+END
+UserManageBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/scm/kelloggs_unique_pack_code/!svn/ver/1473/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/UserManageBean.java
+END
+BrandManageBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/scm/kelloggs_unique_pack_code/!svn/ver/1488/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/BrandManageBean.java
+END
+PromotionManageBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/scm/kelloggs_unique_pack_code/!svn/ver/1488/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/PromotionManageBean.java
+END
+BatchVO.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/scm/kelloggs_unique_pack_code/!svn/ver/1318/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/BatchVO.java
+END
+RedemptionInfoVO.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/scm/kelloggs_unique_pack_code/!svn/ver/1318/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/RedemptionInfoVO.java
+END
+BrandManagementVO.java
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/scm/kelloggs_unique_pack_code/!svn/ver/1318/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/BrandManagementVO.java
+END
+DownloadCodeBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/scm/kelloggs_unique_pack_code/!svn/ver/1460/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/DownloadCodeBean.java
+END
+ApplicationBean.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/scm/kelloggs_unique_pack_code/!svn/ver/1332/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/managedbean/ApplicationBean.java
+END

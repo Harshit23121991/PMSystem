@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.Country</class-a>
+		<class-b>com.kelloggs.upc.common.dto.CountryDTO</class-b>
+	</mapping>
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.Brand</class-a>
+		<class-b>com.kelloggs.upc.common.dto.BrandDTO</class-b>
+	</mapping>
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.User</class-a>
+		<class-b>com.kelloggs.upc.common.dto.UserDTO</class-b>
+	</mapping>
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.Promotion</class-a>
+		<class-b>com.kelloggs.upc.common.dto.PromotionDTO</class-b>
+	</mapping>
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.Pack</class-a>
+		<class-b>com.kelloggs.upc.common.dto.PackDTO</class-b>
+	</mapping>
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.Batch</class-a>
+		<class-b>com.kelloggs.upc.common.dto.BatchDTO</class-b>
+	</mapping>
+	<mapping>
+		<class-a>com.kelloggs.upc.common.domain.ProductType</class-a>
+		<class-b>com.kelloggs.upc.common.dto.ProductTypeDTO</class-b>
+	</mapping>
+</mappings>

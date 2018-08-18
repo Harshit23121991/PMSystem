@@ -1,0 +1,1112 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.BrandDTO;
+import com.kelloggs.upc.common.dto.BrandsDTO;
+import com.kelloggs.upc.common.dto.CountryDTO;
+import com.kelloggs.upc.common.dto.ProductTypeDTO;
+import com.kelloggs.upc.common.dto.ProductTypesDTO;
+import com.kelloggs.upc.common.dto.PromotionDTO;
+import com.kelloggs.upc.common.dto.PromotionsDTO;
+import com.kelloggs.upc.common.dto.ResponseDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.delegator.PromotionManageDelegator;
+
+/**
+ * The Class PromotionManageBean.
+ */
+@ManagedBean(name = "promotionBean")
+@ViewScoped
+public class PromotionManageBean extends BaseBean {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// =================================================
+	// Class Variables
+	// =================================================
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(PromotionManageBean.class);
+	
+	/** The Constant COUNTRY_ID. */
+	private static final Integer COUNTRY_ID = 0;
+	
+	/** The Constant SEARCH_ALL_PROMOTION. */
+	private static final String SEARCH_ALL_PROMOTION = "";
+	
+	/** The resource bundle. */
+	private static ResourceBundle resourceBundle = null;
+	static {
+		LOGGER.info(" Intialize Resource Bundle once upon class load");
+		resourceBundle = FacesContext.getCurrentInstance().getApplication().getResourceBundle(FacesContext.getCurrentInstance(), "SignIn");
+	}
+
+	// =================================================
+	// Instance Variables
+	// =================================================
+	// Hidden properties are required for disabled fields
+	/** The hdncountry value. */
+	private String hdncountryValue = "";
+	
+	/** The hdnbrand value. */
+	private String hdnbrandValue = "";
+	
+	/** The hdnproduct id type value. */
+	private String hdnproductIdTypeValue = "";
+	
+	/** The hdnpromo code value. */
+	private String hdnpromoCodeValue = "";
+	
+	/** The hdnperge value. */
+	private String hdnpergeValue = "";
+	
+	/** The hdnno of days value. */
+	private String hdnnoOfDaysValue = "";
+	
+	/** The hdnpromotion id value. */
+	private String hdnpromotionIdValue = "";
+	
+	
+	private String hdnCodePrefix = "";
+	
+	/** The dlthdn promotion id value. */
+	private String dlthdnPromotionIdValue = "";
+	// Promotion forms properties
+	/** The country value. */
+	private String countryValue = "";
+	
+	/** The promotion namevalue. */
+	private String promotionNamevalue = "";
+	
+	private String codePrefix = "";
+	
+	/** The brand value. */
+	private String brandValue = "";
+	
+	/** The product id type value. */
+	private String productIdTypeValue = "";
+	
+	/** The promo code value. */
+	private String promoCodeValue = "";
+	
+	/** The perge value. */
+	private String pergeValue = "";
+	
+	/** The no of days value. */
+	private String noOfDaysValue = "";
+	
+	/** The search country value. */
+	private String searchCountryValue = "0";
+	
+	/** The search promotion namevalue. */
+	private String searchPromotionNamevalue = "";
+	
+	/** The product types list. */
+	private List<SelectItem> productTypesList = null;
+	
+	/** The srcbrand list. */
+	private List<SelectItem> srcbrandList;
+	
+	/** The destbrand list. */
+	private List<String> destbrandList;
+	
+	/** The src create brand list. */
+	private List<SelectItem> srcCreateBrandList;
+	
+	/** The dest create brand list. */
+	private List<String> destCreateBrandList;
+	
+	/** The promotions. */
+	private List<PromotionDTO> promotions = new ArrayList<PromotionDTO>();
+	
+	/** The current page id. */
+	private int currentPageId;
+	
+	/** The promotion id. */
+	private int promotionID;
+	
+	/** The Constant RECORD_PER_PAGE. */
+	private static final int RECORD_PER_PAGE = 20;
+	
+	/** The show purge. */
+	private boolean showPurge;
+
+	// =================================================
+	// Constructors
+	// =================================================
+	/**
+	 * Instantiates a new promotion manage bean.
+	 */
+	public PromotionManageBean() {
+		LOGGER.debug(" Entered PromotionManageBean constructor");
+
+		// Populate country and all product types before page display
+		PromotionManageDelegator pDelegator = null;
+		ProductTypesDTO productTypesDTO = null;
+		List<ProductTypeDTO> productTypeList = null;
+
+		// Populate all product types list
+		pDelegator = new PromotionManageDelegator();
+		try {
+			productTypesDTO = pDelegator.getAllProductTypes();
+			if (null != productTypesDTO) {
+				productTypeList = productTypesDTO.getaProductTypes();
+				productTypesList = new ArrayList<SelectItem>();
+				SelectItem productTypeItem = new SelectItem("", "Select");
+				productTypesList.add(productTypeItem);
+				for (ProductTypeDTO productTypeDTO : productTypeList) {
+					productTypeItem = new SelectItem(productTypeDTO.getProductTypeId(), productTypeDTO.getProductTypeName());
+					productTypesList.add(productTypeItem);
+				}
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.error(" Error in retrieving all product types ", e);
+		}
+
+		LOGGER.debug(" Existed from PromotionManageBean constructor");
+	}
+
+	/* (non-Javadoc)
+	 * @see com.kelloggs.upc.ui.managedbean.BaseBean#init()
+	 */
+	@PostConstruct
+	public void init() {
+
+		searchPromotions();
+
+	}
+
+	// =================================================
+	// Class Methods
+	// =================================================
+	// =================================================
+	// Instance Methods
+	// =================================================
+
+	/**
+	 * Creates the new promotion.
+	 */
+	public void createNewPromotion() {
+		LOGGER.debug(" Entered createNewPromotion service");
+		PromotionManageDelegator promotionManageDelegator = null;
+		final String countryId = getCountryValue();
+		final String promotionname = getPromotionNamevalue();
+		final String codePrefix = getCodePrefix();
+		final String productidtypeId = getProductIdTypeValue();
+		final String promoCode = getPromoCodeValue();
+		final String perge = getPergeValue();
+		final String noofdays = getNoOfDaysValue();
+		
+
+		final List<String> aselectedBrands = getDestCreateBrandList();
+
+		PromotionDTO ipromotiondto = null;
+		CountryDTO countryDTO = null;
+		ProductTypeDTO productTypeDTO = null;
+		if (StringUtils.isNotBlank(countryId) && StringUtils.isNotBlank(promotionname) && StringUtils.isNotBlank(productidtypeId)) {
+
+			ipromotiondto = new PromotionDTO();
+			countryDTO = new CountryDTO();
+			countryDTO.setCountryID(Integer.parseInt(countryId));
+			ipromotiondto.setCountry(countryDTO);
+			ipromotiondto.setPromotionName(promotionname);
+			ipromotiondto.setCodePrefix(codePrefix);
+
+			productTypeDTO = new ProductTypeDTO();
+			productTypeDTO.setProductTypeId(Integer.parseInt(productidtypeId));
+			ipromotiondto.setProductType(productTypeDTO);
+			ipromotiondto.setPromotionCode(promoCode);
+			ipromotiondto.setPurgingReqd(Boolean.valueOf(perge));
+			if (StringUtils.isNotBlank(noofdays)) {
+				ipromotiondto.setPurgeNoOfDays(Integer.parseInt(noofdays));
+			}
+			List<BrandDTO> brands = new ArrayList<BrandDTO>();
+			BrandDTO brandDTO = null;
+			if (aselectedBrands != null && aselectedBrands.size() > 0) {
+				for (String brandId : aselectedBrands) {
+					brandDTO = new BrandDTO();
+					brandDTO.setBrandID(Integer.valueOf(brandId));
+					brands.add(brandDTO);
+				}
+				ipromotiondto.setBrands(brands);
+			}
+			ResponseDTO oresponsedto = null;
+			try {
+				promotionManageDelegator = new PromotionManageDelegator();
+				oresponsedto = promotionManageDelegator.createPromotion(ipromotiondto);
+				if (oresponsedto != null && StringUtils.isNotBlank(oresponsedto.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEPROMOTION_CREATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage("promotionManagement:createPromotion", fm);
+				}
+				searchPromotions();
+			} catch (UPCApplicationException e) {
+				LOGGER.error(" Error Occured in creating Promotion ", e);
+				FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e.getErrorKey()
+							+ ".error"));
+				fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+				FacesContext.getCurrentInstance().addMessage("promotionManagement:system", fm);
+			}
+
+		}
+		LOGGER.debug(" Existed from createNewPromotion service");
+	}
+
+	/**
+	 * Populate existing promotion.
+	 *
+	 * @param iPromotiondto the i promotiondto
+	 */
+	public void populateExistingPromotion(final PromotionDTO iPromotiondto) {
+		LOGGER.debug(" Entered populateExistingPromotion service");
+		if (srcCreateBrandList != null) {
+			srcCreateBrandList.clear();
+		}
+		if (destCreateBrandList != null) {
+			destCreateBrandList.clear();
+		}
+		PromotionDTO afinalPromotionDTO = iPromotiondto;
+		if (iPromotiondto != null) {
+			int position = 0;
+			for (PromotionDTO aPromotionDTO : promotions) {
+				if (aPromotionDTO.getPromotionID() == iPromotiondto.getPromotionID()) {
+					break;
+				} else {
+					position++;
+				}
+			}
+			if (currentPageId > 1) {
+				afinalPromotionDTO = promotions.get((RECORD_PER_PAGE * (currentPageId - 1)) + position);
+			}
+
+			// Hidden value for ready only/disabled fields
+			setPromotionID(afinalPromotionDTO.getPromotionID());
+			setHdnpromotionIdValue(String.valueOf(afinalPromotionDTO.getPromotionID()));
+//			setDlthdnPromotionIdValue(String.valueOf(afinalPromotionDTO.getPromotionID()));
+			setHdncountryValue(String.valueOf(afinalPromotionDTO.getCountry().getCountryID()));
+			String bandIdList = "";
+			StringBuilder brandIdsSb =new StringBuilder("");
+			
+			if (afinalPromotionDTO.getBrands() != null) {
+				for (BrandDTO brandDTO : afinalPromotionDTO.getBrands()) {
+					brandIdsSb = brandIdsSb.append(brandDTO.getBrandID()).append(",");
+				}
+				bandIdList = brandIdsSb.toString();
+			}
+			setHdnbrandValue(bandIdList);
+			setHdnproductIdTypeValue(String.valueOf(afinalPromotionDTO.getProductType().getProductTypeId()));
+			setHdnpromoCodeValue(afinalPromotionDTO.getPromotionCode());
+			setHdnpergeValue(String.valueOf(afinalPromotionDTO.isPurgingReqd()));
+			setHdnCodePrefix(afinalPromotionDTO.getCodePrefix());
+
+			setHdnnoOfDaysValue(String.valueOf(afinalPromotionDTO.getPurgeNoOfDays()));
+
+			// PrePopulate the value upon table row click
+			setCountryValue(String.valueOf(afinalPromotionDTO.getCountry().getCountryID()));
+			List<SelectItem> brandList = populateBrands(String.valueOf(afinalPromotionDTO.getCountry().getCountryID()));
+			setSrcbrandList(brandList);
+			List<String> destBrandIdList = new ArrayList<String>();
+			if (afinalPromotionDTO.getBrands() != null && afinalPromotionDTO.getBrands().size() > 0) {
+				for (BrandDTO brandDTO : afinalPromotionDTO.getBrands()) {
+					destBrandIdList.add(String.valueOf(brandDTO.getBrandID()));
+				}
+			}
+			setPromotionNamevalue(afinalPromotionDTO.getPromotionName());
+			setCodePrefix(afinalPromotionDTO.getCodePrefix());
+			setDestbrandList(destBrandIdList);
+			setProductIdTypeValue(String.valueOf(afinalPromotionDTO.getProductType().getProductTypeId()));
+			setPromoCodeValue(afinalPromotionDTO.getPromotionCode());
+			setPergeValue(String.valueOf(afinalPromotionDTO.isPurgingReqd()));
+			// Hide or show purge div on purge value
+			setShowPurge(afinalPromotionDTO.isPurgingReqd());
+			setNoOfDaysValue(String.valueOf(afinalPromotionDTO.getPurgeNoOfDays()));
+			
+			//setNoOfDaysValue((afinalPromotionDTO.getPurgeNoOfDays() != 0) ? String.valueOf(afinalPromotionDTO.getPurgeNoOfDays()) : "");
+		}
+		LOGGER.debug(" Existed from populateExistingPromotion service");
+	}
+
+	/**
+	 * Update existing promotion.
+	 */
+	public void updateExistingPromotion() {
+		LOGGER.debug(" Entered updateExistingPromotion service");
+		PromotionManageDelegator promotionManageDelegator = null;
+		final String promotionId = getHdnpromotionIdValue();
+		final String countryId = getHdncountryValue();
+		final String promotionname = getPromotionNamevalue();
+		final String productidtypeId = getHdnproductIdTypeValue();
+		final String promoCode = getHdnpromoCodeValue();
+		final String perge = getHdnpergeValue();
+		final String noofdays = getHdnnoOfDaysValue();
+		final String selectedBrandValue = getHdnbrandValue();
+		final String iCodePrefix = getHdnCodePrefix(); 
+		
+		List<BrandDTO> branddtoList = null;
+		BrandDTO brandDTO = null;
+		if (StringUtils.isNotBlank(selectedBrandValue)) {
+			String[] brandIds = selectedBrandValue.split(",");
+			branddtoList = new ArrayList<BrandDTO>(brandIds.length);
+			for (String brandid : brandIds) {
+				brandDTO = new BrandDTO();
+				brandDTO.setBrandID(Integer.valueOf(brandid));
+				branddtoList.add(brandDTO);
+			}
+		}
+		PromotionDTO ipromotiondto = null;
+		CountryDTO icountryDTO = null;
+		ProductTypeDTO iproductType = null;
+		if (StringUtils.isNotBlank(promotionId) && StringUtils.isNotBlank(countryId) && StringUtils.isNotBlank(promotionname)
+				&& StringUtils.isNotBlank(productidtypeId)) {
+
+			ipromotiondto = new PromotionDTO();
+			icountryDTO = new CountryDTO();
+			icountryDTO.setCountryID(Integer.parseInt(countryId));
+			ipromotiondto.setCountry(icountryDTO);
+			ipromotiondto.setPromotionID(Integer.parseInt(promotionId));
+			ipromotiondto.setPromotionName(promotionname);
+			iproductType = new ProductTypeDTO();
+			iproductType.setProductTypeId(Integer.parseInt(productidtypeId));
+			ipromotiondto.setPromotionCode(promoCode);
+			ipromotiondto.setCodePrefix(iCodePrefix);
+			ipromotiondto.setProductType(iproductType);
+			ipromotiondto.setPurgingReqd(Boolean.valueOf(perge));
+			ipromotiondto.setPurgeNoOfDays(Integer.parseInt(noofdays));
+			ipromotiondto.setPurgeNoOfDays(Integer.parseInt(noofdays));
+			ipromotiondto.setBrands(branddtoList);
+
+			ResponseDTO oresponsedto = null;
+			try {
+				promotionManageDelegator = new PromotionManageDelegator();
+				oresponsedto = promotionManageDelegator.updatePromotion(ipromotiondto);
+				if (oresponsedto != null && StringUtils.isNotBlank(oresponsedto.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEPROMOTION_UPDATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage("promotionManagement:updated", fm);
+				}
+				searchPromotions();
+			} catch (UPCApplicationException e) {
+				LOGGER.error(" Error Occured in editing promotion " + e.getMessage());
+				if (e != null && UPCConstants.SYSTEM_ERROR.equalsIgnoreCase(e.getErrorKey())) {
+					FacesMessage fm = new FacesMessage(resourceBundle.getString("SYSTEM_ERROR"));
+					fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+					FacesContext.getCurrentInstance().addMessage("promotionManagement:system", fm);
+				}
+
+			}
+
+		}
+		LOGGER.debug(" Existed from updateExistingPromotion service");
+	}
+
+	/**
+	 * Delete promotion.
+	 */
+	public void deletePromotion() {
+
+		LOGGER.debug(" Entered deletePromotion service");
+		PromotionManageDelegator promotionManageDelegator = null;
+		final int promotionId = getPromotionID();
+		final FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		HttpSession httpSession = request.getSession();
+		String userid = "";
+		if (null != httpSession.getAttribute("userid")) {
+			userid = httpSession.getAttribute("userid").toString();
+		}
+
+		PromotionDTO ipromotiondto = null;
+		ResponseDTO aoutResponseDTO = null;
+		if (promotionId != 0 && StringUtils.isNotBlank(userid)) {
+			ipromotiondto = new PromotionDTO();
+			ipromotiondto.setPromotionID(promotionId);
+			promotionManageDelegator = new PromotionManageDelegator();
+			try {
+				aoutResponseDTO = promotionManageDelegator.deletePromotion(ipromotiondto, Integer.parseInt(userid));
+				if (aoutResponseDTO != null && StringUtils.isNotBlank(aoutResponseDTO.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEPROMOTION_DELETE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage("promotionManagement:deleted", fm);
+				}
+				searchPromotions();
+			} catch (UPCApplicationException e) {
+				if (e != null && UPCConstants.SYSTEM_ERROR.equalsIgnoreCase(e.getErrorKey())) {
+					FacesMessage fm = new FacesMessage(resourceBundle.getString("SYSTEM_ERROR"));
+					fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+					FacesContext.getCurrentInstance().addMessage("promotionManagement:system", fm);
+				} else {
+					LOGGER.error(" Exception occurred while deleting a promotion ", e);
+				}
+			}
+
+		}
+		LOGGER.debug(" Existed from deletePromotion service");
+	}
+
+	/**
+	 * Search all promotion.
+	 */
+	public void searchAllPromotion() {
+		LOGGER.debug(" Entered searchAllPromotion service");
+		PromotionManageDelegator promotionManageDelegator = null;
+		PromotionDTO iPromotion = null;
+		CountryDTO countryDTO = null;
+		PromotionsDTO promotionsDTO = null;
+		try {
+
+			promotionManageDelegator = new PromotionManageDelegator();
+			iPromotion = new PromotionDTO();
+			countryDTO = new CountryDTO();
+			countryDTO.setCountryID(COUNTRY_ID);
+			iPromotion.setCountry(countryDTO);
+			iPromotion.setPromotionName(SEARCH_ALL_PROMOTION);
+			promotionsDTO = promotionManageDelegator.searchPromotion(iPromotion);
+			setPromotions(promotionsDTO.getaPromotions());
+
+		} catch (UPCApplicationException e) {
+			LOGGER.debug(" UPCApplicationException ", e);
+		}
+		LOGGER.debug(" Existed from searchAllPromotion service");
+
+	}
+
+	/**
+	 * Search promotions.
+	 */
+	public void searchPromotions() {
+		LOGGER.debug(" Entered searchAllPromotion service");
+		PromotionManageDelegator promotionManageDelegator = null;
+		PromotionDTO iPromotion = null;
+		CountryDTO countryDTO = null;
+		PromotionsDTO promotionsDTO = null;
+		final String countryIdStr = getSearchCountryValue();
+		final String promotionName = getSearchPromotionNamevalue();
+		try {
+
+			promotionManageDelegator = new PromotionManageDelegator();
+			iPromotion = new PromotionDTO();
+			countryDTO = new CountryDTO();
+			countryDTO.setCountryID(Integer.parseInt(countryIdStr));
+			iPromotion.setCountry(countryDTO);
+			iPromotion.setPromotionName(promotionName);
+			promotionsDTO = promotionManageDelegator.searchPromotion(iPromotion);
+			setPromotions(promotionsDTO.getaPromotions());
+
+		} catch (UPCApplicationException e) {
+			if (null != promotions) {
+				promotions.clear();
+			}
+		}
+		LOGGER.debug(" Existed from searchAllPromotion service");
+	}
+
+	/**
+	 * Search promotion by name.
+	 */
+	public void searchPromotionByName() {
+		LOGGER.debug(" Entered searchPromotionByName service");
+		final String countryId = getSearchCountryValue();
+		final String promotionName = getSearchPromotionNamevalue();
+		PromotionManageDelegator promotionManageDelegator = null;
+		PromotionDTO iPromotion = null;
+		CountryDTO icountryDTO = null;
+		PromotionsDTO promotionsDTO = null;
+
+		try {
+			if ((StringUtils.isNotBlank(countryId) && countryId.length() > 0)
+					|| (StringUtils.isNotBlank(promotionName) && promotionName.length() > 0)) {
+				promotionManageDelegator = new PromotionManageDelegator();
+				iPromotion = new PromotionDTO();
+				icountryDTO = new CountryDTO();
+				icountryDTO.setCountryID(Integer.parseInt(countryId));
+				iPromotion.setCountry(icountryDTO);
+				iPromotion.setPromotionName(promotionName);
+				promotionsDTO = promotionManageDelegator.searchPromotion(iPromotion);
+				setPromotions(promotionsDTO.getaPromotions());
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.debug(" UPCApplicationException ", e);
+		}
+		LOGGER.debug(" Existed from searchPromotionByName service");
+	}
+
+	/**
+	 * Populate brands.
+	 *
+	 * @param iCountryId the i country id
+	 * @return the list
+	 */
+	private List<SelectItem> populateBrands(final String iCountryId) {
+
+		PromotionManageDelegator promotionManageDelegator = null;
+		PromotionDTO iPromotion = null;
+		CountryDTO icountryDTO = null;
+		BrandsDTO abranddto = null;
+		List<SelectItem> iabrands = null;
+		List<BrandDTO> oabrandList = null;
+		try {
+			if (StringUtils.isNotBlank(iCountryId)) {
+				promotionManageDelegator = new PromotionManageDelegator();
+				iPromotion = new PromotionDTO();
+				icountryDTO = new CountryDTO();
+				icountryDTO.setCountryID(Integer.parseInt(iCountryId));
+				iPromotion.setCountry(icountryDTO);
+				abranddto = promotionManageDelegator.searchBrandByCountryId(iPromotion);
+				oabrandList = abranddto.getaBrands();
+				if (null != oabrandList && oabrandList.size() > 0) {
+					iabrands = new ArrayList<SelectItem>(oabrandList.size());
+					for (BrandDTO brandDTO : oabrandList) {
+						iabrands.add(new SelectItem(String.valueOf(brandDTO.getBrandID()), brandDTO.getBrandName()));
+					}
+					LOGGER.trace(" For Country Id " + iCountryId + ", Found " + iabrands.size() + " brands.");
+				}
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.debug(" UPCApplicationException ", e);
+		}
+
+		return iabrands;
+
+	}
+
+	/**
+	 * Country value changed.
+	 *
+	 * @param event the event
+	 */
+	public void countryValueChanged(final ValueChangeEvent event) {
+
+		LOGGER.debug(" Entered countryValueChanged service");
+		final String countryId = (String) event.getNewValue();
+		LOGGER.debug(" Country id  ::: " + countryId);
+		PromotionManageDelegator promotionManageDelegator = null;
+		PromotionDTO iPromotion = null;
+		CountryDTO icountryDTO = null;
+		BrandsDTO abranddto = null;
+		List<BrandDTO> abrands = null;
+		try {
+			if (StringUtils.isNotBlank(countryId) && !"0".equals(countryId)) {
+				promotionManageDelegator = new PromotionManageDelegator();
+				iPromotion = new PromotionDTO();
+				icountryDTO = new CountryDTO();
+				icountryDTO.setCountryID(Integer.parseInt(countryId));
+				iPromotion.setCountry(icountryDTO);
+				abranddto = promotionManageDelegator.searchBrandByCountryId(iPromotion);
+				abrands = abranddto.getaBrands();
+				if (null != abrands) {
+
+					srcCreateBrandList = new ArrayList<SelectItem>();
+					for (BrandDTO brandDTO : abrands) {
+						srcCreateBrandList.add(new SelectItem(brandDTO.getBrandID(), brandDTO.getBrandName()));
+					}
+					LOGGER.trace(" Upon Country Id change , Found " + srcCreateBrandList.size() + " brands.");
+				}
+			} else {
+				if (null != srcCreateBrandList) {
+					srcCreateBrandList.clear();
+				}
+			}
+		} catch (UPCApplicationException e) {
+			if (e != null && UPCConstants.PROMOTION_NOT_FOUND.equals(e.getErrorKey())) {
+				if (null != srcCreateBrandList) {
+					srcCreateBrandList.clear();
+				}
+			} else {
+				LOGGER.debug(" UPCApplicationException ", e);
+			}
+		}
+		LOGGER.debug(" Existed from countryValueChanged service");
+	}
+
+	/**
+	 * Gets the hdncountry value.
+	 *
+	 * @return the hdncountry value
+	 */
+	public String getHdncountryValue() {
+		return hdncountryValue;
+	}
+
+	/**
+	 * Sets the hdncountry value.
+	 *
+	 * @param iHdncountryValue the new hdncountry value
+	 */
+	public void setHdncountryValue(final String iHdncountryValue) {
+		this.hdncountryValue = iHdncountryValue;
+	}
+
+	/**
+	 * Gets the hdnbrand value.
+	 *
+	 * @return the hdnbrand value
+	 */
+	public String getHdnbrandValue() {
+		return hdnbrandValue;
+	}
+
+	/**
+	 * Sets the hdnbrand value.
+	 *
+	 * @param iHdnbrandValue the new hdnbrand value
+	 */
+	public void setHdnbrandValue(final String iHdnbrandValue) {
+		this.hdnbrandValue = iHdnbrandValue;
+	}
+
+	/**
+	 * Gets the hdnproduct id type value.
+	 *
+	 * @return the hdnproduct id type value
+	 */
+	public String getHdnproductIdTypeValue() {
+		return hdnproductIdTypeValue;
+	}
+
+	/**
+	 * Sets the hdnproduct id type value.
+	 *
+	 * @param iHdnproductIdTypeValue the new hdnproduct id type value
+	 */
+	public void setHdnproductIdTypeValue(final String iHdnproductIdTypeValue) {
+		this.hdnproductIdTypeValue = iHdnproductIdTypeValue;
+	}
+
+	/**
+	 * Gets the hdnpromo code value.
+	 *
+	 * @return the hdnpromo code value
+	 */
+	public String getHdnpromoCodeValue() {
+		return hdnpromoCodeValue;
+	}
+
+	/**
+	 * Sets the hdnpromo code value.
+	 *
+	 * @param iHdnpromoCodeValue the new hdnpromo code value
+	 */
+	public void setHdnpromoCodeValue(final String iHdnpromoCodeValue) {
+		this.hdnpromoCodeValue = iHdnpromoCodeValue;
+	}
+
+	/**
+	 * Gets the hdnperge value.
+	 *
+	 * @return the hdnperge value
+	 */
+	public String getHdnpergeValue() {
+		return hdnpergeValue;
+	}
+
+	/**
+	 * Sets the hdnperge value.
+	 *
+	 * @param iHdnpergeValue the new hdnperge value
+	 */
+	public void setHdnpergeValue(final String iHdnpergeValue) {
+		this.hdnpergeValue = iHdnpergeValue;
+	}
+
+	/**
+	 * Gets the hdnno of days value.
+	 *
+	 * @return the hdnno of days value
+	 */
+	public String getHdnnoOfDaysValue() {
+		return hdnnoOfDaysValue;
+	}
+
+	/**
+	 * Sets the hdnno of days value.
+	 *
+	 * @param iHdnnoOfDaysValue the new hdnno of days value
+	 */
+	public void setHdnnoOfDaysValue(final String iHdnnoOfDaysValue) {
+		this.hdnnoOfDaysValue = iHdnnoOfDaysValue;
+	}
+
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the promotion namevalue.
+	 *
+	 * @return the promotion namevalue
+	 */
+	public String getPromotionNamevalue() {
+		return promotionNamevalue;
+	}
+
+	/**
+	 * Sets the promotion namevalue.
+	 *
+	 * @param iPromotionNamevalue the new promotion namevalue
+	 */
+	public void setPromotionNamevalue(final String iPromotionNamevalue) {
+		this.promotionNamevalue = iPromotionNamevalue;
+	}
+
+	/**
+	 * Gets the brand value.
+	 *
+	 * @return the brand value
+	 */
+	public String getBrandValue() {
+		return brandValue;
+	}
+
+	/**
+	 * Sets the brand value.
+	 *
+	 * @param iBrandValue the new brand value
+	 */
+	public void setBrandValue(final String iBrandValue) {
+		this.brandValue = iBrandValue;
+	}
+
+	/**
+	 * Gets the product id type value.
+	 *
+	 * @return the product id type value
+	 */
+	public String getProductIdTypeValue() {
+		return productIdTypeValue;
+	}
+
+	/**
+	 * Sets the product id type value.
+	 *
+	 * @param iProductIdTypeValue the new product id type value
+	 */
+	public void setProductIdTypeValue(final String iProductIdTypeValue) {
+		this.productIdTypeValue = iProductIdTypeValue;
+	}
+
+	/**
+	 * Gets the promo code value.
+	 *
+	 * @return the promo code value
+	 */
+	public String getPromoCodeValue() {
+		return promoCodeValue;
+	}
+
+	/**
+	 * Sets the promo code value.
+	 *
+	 * @param iPromoCodeValue the new promo code value
+	 */
+	public void setPromoCodeValue(final String iPromoCodeValue) {
+		this.promoCodeValue = iPromoCodeValue;
+	}
+
+	/**
+	 * Gets the perge value.
+	 *
+	 * @return the perge value
+	 */
+	public String getPergeValue() {
+		return pergeValue;
+	}
+
+	/**
+	 * Sets the perge value.
+	 *
+	 * @param iPurgeValue the new perge value
+	 */
+	public void setPergeValue(final String iPurgeValue) {
+		this.pergeValue = iPurgeValue;
+	}
+
+	/**
+	 * Gets the no of days value.
+	 *
+	 * @return the no of days value
+	 */
+	public String getNoOfDaysValue() {
+		return noOfDaysValue;
+	}
+
+	/**
+	 * Sets the no of days value.
+	 *
+	 * @param iNoOfDaysValue the new no of days value
+	 */
+	public void setNoOfDaysValue(final String iNoOfDaysValue) {
+		this.noOfDaysValue = iNoOfDaysValue;
+	}
+
+	/**
+	 * Gets the search promotion namevalue.
+	 *
+	 * @return the search promotion namevalue
+	 */
+	public String getSearchPromotionNamevalue() {
+		return searchPromotionNamevalue;
+	}
+
+	/**
+	 * Sets the search promotion namevalue.
+	 *
+	 * @param iSearchPromotionNamevalue the new search promotion namevalue
+	 */
+	public void setSearchPromotionNamevalue(final String iSearchPromotionNamevalue) {
+		this.searchPromotionNamevalue = iSearchPromotionNamevalue;
+	}
+
+	/**
+	 * Gets the promotions.
+	 *
+	 * @return the promotions
+	 */
+	public List<PromotionDTO> getPromotions() {
+		return promotions;
+	}
+
+	/**
+	 * Sets the promotions.
+	 *
+	 * @param iPromotions the new promotions
+	 */
+	public void setPromotions(final List<PromotionDTO> iPromotions) {
+		this.promotions = iPromotions;
+	}
+
+	/**
+	 * Gets the search country value.
+	 *
+	 * @return the search country value
+	 */
+	public String getSearchCountryValue() {
+		return searchCountryValue;
+	}
+
+	/**
+	 * Sets the search country value.
+	 *
+	 * @param iSearchCountryValue the new search country value
+	 */
+	public void setSearchCountryValue(final String iSearchCountryValue) {
+		this.searchCountryValue = iSearchCountryValue;
+	}
+
+	/**
+	 * Gets the product types list.
+	 *
+	 * @return the product types list
+	 */
+	public List<SelectItem> getProductTypesList() {
+		return productTypesList;
+	}
+
+	/**
+	 * Sets the product types list.
+	 *
+	 * @param iProductTypesList the new product types list
+	 */
+	public void setProductTypesList(final List<SelectItem> iProductTypesList) {
+		this.productTypesList = iProductTypesList;
+	}
+
+	/**
+	 * Gets the srcbrand list.
+	 *
+	 * @return the srcbrand list
+	 */
+	public List<SelectItem> getSrcbrandList() {
+		return srcbrandList;
+	}
+
+	/**
+	 * Sets the srcbrand list.
+	 *
+	 * @param iSrcbrandList the new srcbrand list
+	 */
+	public void setSrcbrandList(final List<SelectItem> iSrcbrandList) {
+		this.srcbrandList = iSrcbrandList;
+	}
+
+	/**
+	 * Gets the destbrand list.
+	 *
+	 * @return the destbrand list
+	 */
+	public List<String> getDestbrandList() {
+		return destbrandList;
+	}
+
+	/**
+	 * Sets the destbrand list.
+	 *
+	 * @param iDestbrandList the new destbrand list
+	 */
+	public void setDestbrandList(final List<String> iDestbrandList) {
+		this.destbrandList = iDestbrandList;
+	}
+
+	/**
+	 * Gets the hdnpromotion id value.
+	 *
+	 * @return the hdnpromotion id value
+	 */
+	public String getHdnpromotionIdValue() {
+		return hdnpromotionIdValue;
+	}
+
+	/**
+	 * Sets the hdnpromotion id value.
+	 *
+	 * @param iHdnpromotionIdValue the new hdnpromotion id value
+	 */
+	public void setHdnpromotionIdValue(final String iHdnpromotionIdValue) {
+		this.hdnpromotionIdValue = iHdnpromotionIdValue;
+	}
+
+	/**
+	 * Gets the dlthdn promotion id value.
+	 *
+	 * @return the dlthdn promotion id value
+	 */
+	public String getDlthdnPromotionIdValue() {
+		return dlthdnPromotionIdValue;
+	}
+
+	/**
+	 * Sets the dlthdn promotion id value.
+	 *
+	 * @param iDlthdnPromotionIdValue the new dlthdn promotion id value
+	 */
+	public void setDlthdnPromotionIdValue(final String iDlthdnPromotionIdValue) {
+		this.dlthdnPromotionIdValue = iDlthdnPromotionIdValue;
+	}
+
+	/**
+	 * Gets the current page id.
+	 *
+	 * @return the current page id
+	 */
+	public int getCurrentPageId() {
+		return currentPageId;
+	}
+
+	/**
+	 * Sets the current page id.
+	 *
+	 * @param iCurrentPageId the new current page id
+	 */
+	public void setCurrentPageId(final int iCurrentPageId) {
+		this.currentPageId = iCurrentPageId;
+	}
+
+	/**
+	 * Checks if is show purge.
+	 *
+	 * @return true, if is show purge
+	 */
+	public boolean isShowPurge() {
+		return showPurge;
+	}
+
+	/**
+	 * Sets the show purge.
+	 *
+	 * @param iShowPurge the new show purge
+	 */
+	public void setShowPurge(final boolean iShowPurge) {
+		this.showPurge = iShowPurge;
+	}
+
+	/**
+	 * Gets the src create brand list.
+	 *
+	 * @return the src create brand list
+	 */
+	public List<SelectItem> getSrcCreateBrandList() {
+		return srcCreateBrandList;
+	}
+
+	/**
+	 * Sets the src create brand list.
+	 *
+	 * @param iSrcCreateBrandList the new src create brand list
+	 */
+	public void setSrcCreateBrandList(final List<SelectItem> iSrcCreateBrandList) {
+		this.srcCreateBrandList = iSrcCreateBrandList;
+	}
+
+	/**
+	 * Gets the dest create brand list.
+	 *
+	 * @return the dest create brand list
+	 */
+	public List<String> getDestCreateBrandList() {
+		return destCreateBrandList;
+	}
+
+	/**
+	 * Sets the dest create brand list.
+	 *
+	 * @param iDestCreateBrandList the new dest create brand list
+	 */
+	public void setDestCreateBrandList(final List<String> iDestCreateBrandList) {
+		this.destCreateBrandList = iDestCreateBrandList;
+	}
+
+	public int getPromotionID() {
+		return promotionID;
+	}
+
+	public void setPromotionID(final int iPromotionID) {
+		this.promotionID = iPromotionID;
+	}
+
+	public String getCodePrefix() {
+		return codePrefix;
+	}
+
+	public void setCodePrefix(String codePrefix) {
+		this.codePrefix = codePrefix;
+	}
+
+	public String getHdnCodePrefix() {
+		return hdnCodePrefix;
+	}
+
+	public void setHdnCodePrefix(String hdnCodePrefix) {
+		this.hdnCodePrefix = hdnCodePrefix;
+	}
+
+}

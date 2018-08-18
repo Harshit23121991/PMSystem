@@ -1,0 +1,42 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+	
+/**
+ * The Class ProductTypesDTO.
+ */
+@XmlRootElement(name = "productTypes", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("productTypes")
+public class ProductTypesDTO {
+	
+	
+	/** The a product types. */
+	private List<ProductTypeDTO> aProductTypes;
+	
+	/**
+	 * Gets the a product types.
+	 *
+	 * @return the a product types
+	 */
+	@XmlElement(name = "ProductType")
+	public List<ProductTypeDTO> getaProductTypes() {
+		return aProductTypes;
+	}
+
+	/**
+	 * Sets the a product types.
+	 *
+	 * @param iProductTypes the new a product types
+	 */
+	public void setaProductTypes(final List<ProductTypeDTO> iProductTypes) {
+		this.aProductTypes = iProductTypes;
+	}
+	
+}

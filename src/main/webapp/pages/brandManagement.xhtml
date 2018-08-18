@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<h:head>
+		<title>Brand Management</title>
+	</h:head>
+	<h:body>
+		<h2>
+			<h:outputText value="#{SignIn.BRAND_MNG_HEADING}" />
+		</h2>
+		<a4j:outputPanel id="brand_errorMessage">
+			  <h:messages  layout="list" errorClass="msgerror" warnClass="msgwarn" fatalClass="msgfatal"  infoClass="msginform"/>
+		</a4j:outputPanel>
+		<h:form id="brandmanagementForm" name="brandmanagementForm">
+			<div class="successMsg">
+			</div>
+
+			<div class="tableTopWrapper manageBrand">
+				<p class="tableInfoText">Click on table row to edit a brand</p>
+				<h:panelGroup>
+					<a4j:outputPanel id="pagination">
+						<div class="pagination floatRight">
+							<rich:dataScroller for="brandInfoTbl" id="sc5" page="#{brandManageBean.aCurrentPage}"
+								stepControls="show" fastControls="hide" boundaryControls="show"
+								maxPages="5">
+								<f:facet name="first">
+									<h:graphicImage url="../img/first.png"></h:graphicImage>
+								</f:facet>
+								<f:facet name="last">
+									<h:graphicImage url="../img/last.png"></h:graphicImage>
+								</f:facet>
+								<f:facet name="previous">
+									<h:graphicImage url="../img/previous.png"></h:graphicImage>
+								</f:facet>
+								<f:facet name="next">
+									<h:graphicImage url="../img/next.png"></h:graphicImage>
+								</f:facet>
+							</rich:dataScroller>
+						</div>
+					</a4j:outputPanel>
+				</h:panelGroup>
+				<div class="clearBoth"></div>
+			</div>
+
+			<div class="clearBoth"></div>
+
+			<div class="tableContentTop">
+
+				<span class="left"></span> <span class="createUser floatLeft"><a
+					href="#createBrand" class="basic">Create New Brand</a> </span>
+				<div class="floatRight">
+					<span class="floatLeft countryOfPromotion marginRight10px">
+						<span class="floatLeft thText marginRight10px"> <h:outputText
+								value="Country of Promotion" /></span> <span
+						class="cSelectbox selectBoxMedium withBg"> <span
+							class="dropdown_left withBg">  <h:selectOneMenu id="countryId"
+									value="#{brandManageBean.countrySearchValue}"
+									render="brandmanageForm">
+									<f:selectItem itemValue="0" itemLabel="--Select Country--" />
+									<f:selectItems value="#{brandManageBean.countryList}" />
+								</h:selectOneMenu>
+						</span>
+					</span>
+					</span> <span class="floatLeft marginRight10px marginTop5px"> <span
+						class="floatLeft marginRight10px brandLbl"> <h:outputText
+								value="Brand" />
+					</span> <h:inputText id="brand" value="#{brandManageBean.brand}"
+							onkeypress="if (event.keyCode == 13) return false;"
+							styleClass="floatLeft marginRight10px" size="10" /> 
+							
+							<a4j:commandLink
+							styleClass="searchBtn floatLeft" type="button" value="Search"
+							action="#{brandManageBean.searchBrands}"
+			
+							render="brandList,brand_errorMessage,pagination">
+						</a4j:commandLink>
+					</span>
+				</div>
+				<div class="clearBoth"></div>
+				<div class="brandInfoTbl">
+					<a4j:outputPanel id="brandList">
+
+						<rich:dataTable styleClass="managerBrand" id="brandInfoTbl"
+							rows="20" rowClasses="odd-row, even-row"
+							rendered="#{ not empty brandManageBean.brandsList}"
+							value="#{brandManageBean.brandsList}" var="brand">
+							<a4j:ajax event="rowclick" render="populateBrandForm"
+								listener="#{brandManageBean.populateExistingBrands(brand)}" />
+							<tr>
+								<f:facet name="header">
+									<rich:columnGroup>
+										<rich:column style="width:40%;">Brand Name</rich:column>
+										<rich:column style="width:30%;">Brand Code</rich:column>
+										<rich:column style="width:30%;">Country of Promotion</rich:column>
+
+									</rich:columnGroup>
+								</f:facet>
+								<rich:column>
+									<h:outputText value="#{brand.brandName}" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="#{brand.brandCode}" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="#{brand.country.countryName}" />
+								</rich:column>
+							</tr>
+						</rich:dataTable>
+
+					</a4j:outputPanel>
+					<div class="clearBoth"></div>
+				</div>
+			</div>
+		</h:form>
+		<div id="modal">
+			<div id="createBrand" style="display: none;">
+				<h2>Create New Brand</h2>
+				<a4j:outputPanel id="createBrandMessage">
+								  <h:messages  layout="list" errorClass="msgerror" warnClass="msgwarn" fatalClass="msgfatal"  infoClass="msginform"/>
+							</a4j:outputPanel>
+				<p class="infoText">* Indicates Required Fields</p>
+				<div class="modalWrapper">
+					<f:view>
+						<h:form id="brandCreateForm" name="brandCreateForm">
+							
+							<div class="row">
+								<div id="gpcCountry" class="row">
+									<label><h:outputText value="#{SignIn.COUNTRY_LABEL}" /></label>
+									<div class="cSelectbox selectBoxMedium">
+										<span class="dropdown_left"> <h:selectOneMenu
+												id="brccountryId" value="#{brandManageBean.countryValue}"
+												render="brandmanageForm">
+												<f:selectItem itemValue="0" itemLabel="Select" />
+												<f:selectItems value="#{brandManageBean.countryList}" />
+											</h:selectOneMenu>
+										</span>
+									</div>
+								</div>
+
+								<span id="brccountryIdEr1" class="errMsg floatLeft"
+									style="display: none;"><h:outputText
+										value="Please select the country" /></span>
+								<div class="clearBoth"></div>
+							</div>
+							<div class="row">
+								<label>Brand Name*</label> <span> <h:inputText
+										id="brcbrandName" value="#{brandManageBean.brandValue}" maxlength="50" /></span> <span
+									id="brcbrandNameEr1" class="errMsg"
+									style="display: none;"><h:outputText
+										value="Please enter Brand name" /></span>
+							</div>
+							<div class="row">
+								<label>Brand Code*</label> <span> <h:inputText
+										id="brcbrandCode" value="#{brandManageBean.brandCodeValue}" maxlength="50"></h:inputText>
+								</span> <span id="brcbrandCodeEr1" class="errMsg"
+									style="display: none;"><h:outputText
+										value="Please enter Brand code" /></span>
+							</div>
+							<div class="row">
+								<label>&nbsp;</label> <span> <a href="#"
+									class="rounded simplemodal-close"> <span>Cancel</span>
+								</a> &nbsp;&nbsp; <a4j:commandLink render="createBrandMessage,brandList,pagination"
+										action="#{brandManageBean.createNewBrand}"
+										styleClass="rounded"
+										onclick="return validateBrandForm('create')">
+										<span>Save</span>
+									</a4j:commandLink>
+								</span>
+							</div>
+						</h:form>
+					</f:view>
+				</div>
+				<div class="clearBoth"></div>
+			</div>
+
+
+			<!-- create Brand popup content ends here ... -->
+
+			<div id="updateBrand" style="display: none;">
+				<h2>Update Brand</h2>
+			
+				<div class="modalWrapper">
+
+					<f:view>
+						<h:form id="updateBrandForm" action="">
+							<a4j:outputPanel id="populateBrandForm">
+								<h:inputHidden id="hdnBrandId"
+									value="#{brandManageBean.hiddenBrandId}" />
+								<a4j:outputPanel id="messageUpdateBrandHeaderMsg">
+									  <h:messages  layout="list" errorClass="msgerror" warnClass="msgwarn" fatalClass="msgfatal"  infoClass="msginform"/>
+								</a4j:outputPanel>
+								<div class="row">
+
+									<div id="gpcCountry" class="row">
+										<label><h:outputText value="#{SignIn.COUNTRY_LABEL}" /></label>
+										<div class="cSelectbox selectBoxMedium disabled">
+											<span class="dropdown_left"><h:selectOneMenu
+													id="brccountryId" readonly="true" disabled="true"
+													value="#{brandManageBean.countryValue}"
+													render="brandmanageForm" >
+													<f:selectItem itemValue="0" itemLabel="Select" />
+													<f:selectItems value="#{brandManageBean.countryList}" />
+												</h:selectOneMenu>
+											</span>
+										</div>
+									</div>
+
+
+									<span id="brccountryIdEr" class="errMsg floatLeft"
+										style="display: none;"><h:outputText
+											value="Please select the country" /></span>
+
+									<div class="clearBoth"></div>
+								</div>
+								<div class="row">
+									<label>Brand Name*</label> <span class="rField"> <h:inputText
+											id="brcbrandName" styleClass="brcbrandName"
+											value="#{brandManageBean.brandValue}" maxlength="50"></h:inputText></span> <span
+										id="brcbrandNameEr" class="errMsg floatLeft"
+										style="display: none;"><h:outputText
+											value="Please enter Brand name" /></span>
+									<div class="clearBoth"></div>
+								</div>
+								<div class="row">
+									<label>Brand Code*</label> <span class="rField"> <h:inputText
+											readonly="true" disabled="true" styleClass="brcbrandCode"
+											id="brcbrandCode" value="#{brandManageBean.brandCodeValue}"></h:inputText>
+									</span> <span id="brcbrandCodeEr" class="errMsg floatLeft"
+										style="display: none;"><h:outputText
+											value="Please enter Brand code" /></span>
+									<div class="clearBoth"></div>
+								</div>
+							</a4j:outputPanel>
+
+							<div class="row">
+								<label><a href="#" class="rounded deleteBrand">
+											<span>Delete</span>
+									</a></label>
+								<span> <a href="#" class="rounded simplemodal-close">
+										<span>Cancel</span>
+								</a>&nbsp;&nbsp; <a4j:commandLink
+										render="messageUpdateBrandHeaderMsg,pagination,brandList"
+										action="#{brandManageBean.updateExistingBrand}"
+										styleClass="rounded"
+										onclick="return validateBrandForm('update')">
+										<span>Update</span>
+									</a4j:commandLink>
+								</span>
+							</div>
+
+						</h:form>
+					</f:view>
+					
+					<f:view>
+							<h:form id="deleteBrandForm">
+								<div id="deleteBrand" style="display: none;"
+									class="alignCenter">
+									<div>You are deleting a Brand</div>
+									<p class="inforText">Please confirm your action</p>
+									<span> <a href="#" class="rounded simplemodal-close">
+											<span>Cancel</span>
+									</a> <a4j:commandLink action="#{brandManageBean.deleteBrand}"
+											render="brandList,pagination,brand_errorMessage"
+											styleClass="rounded simplemodal-close">
+											<span>Delete</span>
+										</a4j:commandLink>
+									</span>
+								</div>
+							</h:form>
+						</f:view>
+
+				</div>
+				<div class="clearBoth"></div>
+			</div>
+
+		</div>
+		<!-- Update Brand popup content ends here ... -->
+		<a class="basic" href="#updateBrand" id="updateBrandLink"
+			style="display: none;"></a>
+
+	</h:body>
+
+
+</ui:composition>

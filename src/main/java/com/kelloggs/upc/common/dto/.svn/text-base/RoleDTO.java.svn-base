@@ -1,0 +1,114 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class RoleDTO.
+ */
+@XmlRootElement(name = "role", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("role")
+public class RoleDTO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The role id. */
+	private int roleId;
+	
+	/** The role name. */
+	private String roleName;
+	
+	/** The menu. */
+	private List<MenuDTO> menu;
+	
+	/**
+	 * Gets the role name.
+	 *
+	 * @return the role name
+	 */
+	public String getRoleName() {
+		return roleName;
+	}
+	
+	/**
+	 * Sets the role name.
+	 *
+	 * @param iRoleName the new role name
+	 */
+	public void setRoleName(final String iRoleName) {
+		this.roleName = iRoleName;
+	}
+	
+	/**
+	 * Gets the role id.
+	 *
+	 * @return the role id
+	 */
+	public int getRoleId() {
+		return roleId;
+	}
+	
+	/**
+	 * Sets the role id.
+	 *
+	 * @param iRoleId the new role id
+	 */
+	public void setRoleId(final int iRoleId) {
+		this.roleId = iRoleId;
+	}
+	
+	/**
+	 * Gets the menu.
+	 *
+	 * @return the menu
+	 */
+	public List<MenuDTO> getMenu() {
+		return menu;
+	}
+	
+	/**
+	 * Sets the menu.
+	 *
+	 * @param iMenu the new menu
+	 */
+	public void setMenu(final List<MenuDTO> iMenu) {
+		this.menu = iMenu;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object iArg0) {
+		if (iArg0 == null) {
+			return false;
+		}
+		if (!(iArg0 instanceof RoleDTO)) {
+			return false;
+		}
+		RoleDTO arg1 = (RoleDTO) iArg0;
+		return (this.roleId == arg1.getRoleId()) && (arg1.getRoleName().equals(this.roleName));
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		int code = 0;
+		code += roleId;
+		if (roleName != null) {
+			code += roleName.hashCode();
+		}
+		return code;
+	}
+}

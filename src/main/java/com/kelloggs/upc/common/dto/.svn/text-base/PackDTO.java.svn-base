@@ -1,0 +1,277 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+
+/**
+ * The Class PackDTO.
+ */
+@XmlRootElement(name = "pack", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("pack")
+public class PackDTO implements Serializable {
+	
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 2818020343212551189L;
+	
+	/** The country. */
+	private CountryDTO country;
+	
+	/** The pack code set id. */
+	private int packCodeSetID;
+
+	/** The promotion. */
+	private PromotionDTO promotion;
+		
+	/** The pack code set name. */
+	private String packCodeSetName;
+
+	/** The product type. */
+	private ProductTypeDTO productType;
+
+	/** The product. */
+	private ProductDTO product;
+
+	/** The no of codes. */
+	private int noOfCodes;
+	
+	/** The start date. */
+	private Date startDate;
+
+	/** The end date. */
+	private Date endDate;
+	
+	/** The message. */
+	private String message;
+	
+	/** The brand id. */
+	private int brandID;
+	
+	/** The brand. */
+	private BrandDTO brand;
+
+
+	/**
+	 * Gets the country.
+	 *
+	 * @return the country
+	 */
+	public CountryDTO getCountry() {
+		return country;
+	}
+
+	/**
+	 * Sets the country.
+	 *
+	 * @param iCountry the new country
+	 */
+	public void setCountry(final CountryDTO iCountry) {
+		this.country = iCountry;
+	}
+
+	/**
+	 * Gets the pack code set id.
+	 *
+	 * @return the pack code set id
+	 */
+	public int getPackCodeSetID() {
+		return packCodeSetID;
+	}
+
+	/**
+	 * Sets the pack code set id.
+	 *
+	 * @param iPackCodeSetID the new pack code set id
+	 */
+	public void setPackCodeSetID(final int iPackCodeSetID) {
+		this.packCodeSetID = iPackCodeSetID;
+	}
+
+	/**
+	 * Gets the promotion.
+	 *
+	 * @return the promotion
+	 */
+	public PromotionDTO getPromotion() {
+		return promotion;
+	}
+
+	/**
+	 * Sets the promotion.
+	 *
+	 * @param iPromotion the new promotion
+	 */
+	public void setPromotion(final PromotionDTO iPromotion) {
+		this.promotion = iPromotion;
+	}
+
+	/**
+	 * Gets the pack code set name.
+	 *
+	 * @return the pack code set name
+	 */
+	public String getPackCodeSetName() {
+		return packCodeSetName;
+	}
+
+	/**
+	 * Sets the pack code set name.
+	 *
+	 * @param iPackCodeSetName the new pack code set name
+	 */
+	public void setPackCodeSetName(final String iPackCodeSetName) {
+		this.packCodeSetName = iPackCodeSetName;
+	}
+
+	/**
+	 * Gets the product type.
+	 *
+	 * @return the product type
+	 */
+	public ProductTypeDTO getProductType() {
+		return productType;
+	}
+
+	/**
+	 * Sets the product type.
+	 *
+	 * @param iProductType the new product type
+	 */
+	public void setProductType(final ProductTypeDTO iProductType) {
+		this.productType = iProductType;
+	}
+
+	/**
+	 * Gets the product.
+	 *
+	 * @return the product
+	 */
+	public ProductDTO getProduct() {
+		return product;
+	}
+
+	/**
+	 * Sets the product.
+	 *
+	 * @param iProduct the new product
+	 */
+	public void setProduct(final ProductDTO iProduct) {
+		this.product = iProduct;
+	}
+
+	/**
+	 * Gets the no of codes.
+	 *
+	 * @return the no of codes
+	 */
+	public int getNoOfCodes() {
+		return noOfCodes;
+	}
+
+	/**
+	 * Sets the no of codes.
+	 *
+	 * @param iNoOfCodes the new no of codes
+	 */
+	public void setNoOfCodes(final int iNoOfCodes) {
+		this.noOfCodes = iNoOfCodes;
+	}
+
+	/**
+	 * Gets the start date.
+	 *
+	 * @return the start date
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * Sets the start date.
+	 *
+	 * @param iStartDate the new start date
+	 */
+	public void setStartDate(final Date iStartDate) {
+		this.startDate = iStartDate;
+	}
+
+	/**
+	 * Gets the end date.
+	 *
+	 * @return the end date
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	/**
+	 * Sets the end date.
+	 *
+	 * @param iEndDate the new end date
+	 */
+	public void setEndDate(final Date iEndDate) {
+		this.endDate = iEndDate;
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message.
+	 *
+	 * @param iMessage the new message
+	 */
+	public void setMessage(final String iMessage) {
+		this.message = iMessage;
+	}
+
+	/**
+	 * Gets the brand id.
+	 *
+	 * @return the brand id
+	 */
+	public int getBrandID() {
+		return brandID;
+	}
+
+	/**
+	 * Sets the brand id.
+	 *
+	 * @param iBrandID the new brand id
+	 */
+	public void setBrandID(final int iBrandID) {
+		this.brandID = iBrandID;
+	}
+
+	/**
+	 * Gets the brand.
+	 *
+	 * @return the brand
+	 */
+	public BrandDTO getBrand() {
+		return brand;
+	}
+
+	/**
+	 * Sets the brand.
+	 *
+	 * @param iBrand the new brand
+	 */
+	public void setBrand(final BrandDTO iBrand) {
+		this.brand = iBrand;
+	}
+	
+ 
+
+}

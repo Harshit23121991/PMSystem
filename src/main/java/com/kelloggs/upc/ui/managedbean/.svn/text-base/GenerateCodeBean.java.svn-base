@@ -1,0 +1,605 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.component.html.HtmlSelectOneMenu;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.BatchDTO;
+import com.kelloggs.upc.common.dto.BatchsDTO;
+import com.kelloggs.upc.common.dto.GenerateCodeDTO;
+import com.kelloggs.upc.common.dto.PackDTO;
+import com.kelloggs.upc.common.dto.PacksDTO;
+import com.kelloggs.upc.common.dto.PromotionDTO;
+import com.kelloggs.upc.common.dto.PromotionsDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.delegator.GenerateCodeDelegator;
+
+/**
+ * The Class GenerateCodeBean.
+ */
+@ManagedBean(name = "generateCodeBean")
+@ViewScoped
+public class GenerateCodeBean extends BaseBean {
+	
+	/*@ManagedProperty(value = "#{ApplicationBean}")
+	private ApplicationBean applicationBean;*/
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(GenerateCodeBean.class);
+	
+	/** The country value. */
+	private String countryValue = "0";
+	
+	/** The brand value. */
+	private String brandValue = "0";
+	
+	/** The promotion value. */
+	private String promotionValue = "0";
+	
+	/** The package value. */
+	private String packageValue = "0";
+	
+	/** The code to generate value. */
+	private String codeToGenerateValue = "";
+	
+	/** The generate code out put. */
+	private GenerateCodeDTO generateCodeOutPut = null;
+	
+	/** The code sum. */
+	private Integer codeSum = 0;
+	
+	/** The batch sum. */
+	private Integer batchSum = 0;
+
+
+
+	
+	/** The country names. */
+	private HtmlSelectOneMenu countryNames;
+
+	//private List<SelectItem> countryList = new ArrayList<SelectItem>();
+
+	/** The brands. */
+	private List<SelectItem> brands = new ArrayList<SelectItem>();
+
+	/** The promotion list. */
+	private List<SelectItem> promotionList = new ArrayList<SelectItem>();
+
+	/** The package list. */
+	private List<SelectItem> packageList = new ArrayList<SelectItem>();
+
+	/** The package map. */
+	private Map<String, PackDTO> packageMap = new HashMap<String, PackDTO>();
+
+	/** The batch history list. */
+	private List<BatchVO> batchHistoryList = new ArrayList<BatchVO>();
+
+	/** The pack start date. */
+	private Date packStartDate;
+
+	/** The pack end date. */
+	private Date packEndDate;
+
+	/**
+	 * Instantiates a new generate code bean.
+	 */
+	public GenerateCodeBean() {
+		LOGGER.debug(" Entered GenerateCodeBean constructor");
+		setGenerateCodeOutPut(null);
+		batchHistoryList.clear();
+		packageList.clear();
+		promotionList.clear();
+		LOGGER.debug(" Existed GenerateCodeBean constructor");
+	}
+	
+	/**
+	 * Gets the brands.
+	 *
+	 * @return the brands
+	 */
+	public List<SelectItem> getBrands() {
+		return brands;
+	}
+
+	/**
+	 * Sets the brands.
+	 *
+	 * @param iBrands the new brands
+	 */
+	public void setBrands(final List<SelectItem> iBrands) {
+		this.brands = iBrands;
+	}
+
+	/**
+	 * Gets the promotions.
+	 *
+	 * @return the promotions
+	 */
+	public List<SelectItem> getPromotions() {
+		return promotionList;
+	}
+
+	/**
+	 * Sets the promotions.
+	 *
+	 * @param promotions the new promotions
+	 */
+	public void setPromotions(final List<SelectItem> promotions) {
+		this.promotionList = promotions;
+	}
+	
+	/**
+	 * Country value changed.
+	 *
+	 * @param event the event
+	 */
+	public void countryValueChanged(final ValueChangeEvent event) {
+		LOGGER.debug(" Entered countryValueChanged service");
+		try {
+			setGenerateCodeOutPut(null);
+			setPackStartDate(null);
+			setPackEndDate(null);
+			batchHistoryList.clear();
+			packageList.clear();
+			promotionList.clear();
+			
+			if (null != event.getNewValue()) {
+				String countryId = (String) event.getNewValue();
+				setCountryValue(countryId);
+				PromotionsDTO promotionsDTO = GenerateCodeDelegator.getPromotions(countryId);
+				List<PromotionDTO> aPromotionList = promotionsDTO.getaPromotions();
+				//promotionList.add(new SelectItem("0", "Select"));
+
+				if (aPromotionList != null) {
+					for (int i = 0; i < aPromotionList.size(); i++) {
+						SelectItem item = new SelectItem(aPromotionList.get(i).getPromotionID(), aPromotionList.get(i).getPromotionName());
+						promotionList.add(item);
+					}
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(errorResourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		
+		LOGGER.debug(" Exsited from countryValueChanged service");
+	}
+
+	/**
+	 * Promotion value changed.
+	 *
+	 * @param event the event
+	 */
+	public void promotionValueChanged(final ValueChangeEvent event) {
+		LOGGER.debug(" Entered promotionValueChanged service");
+		try {
+			setGenerateCodeOutPut(null);
+			setPackStartDate(null);
+			setPackEndDate(null);
+			batchHistoryList.clear();
+			packageMap.clear();
+			packageList.clear();
+			if (null != event.getNewValue()) {
+				String promotionId = (String) event.getNewValue();
+				setPromotionValue(promotionId);
+				PacksDTO packsdto = GenerateCodeDelegator.getPackages(promotionId);
+
+				List<PackDTO> packCodeSetList = packsdto.getaPacks();
+				//packageList.add(new SelectItem("0", "Select"));
+
+				if (packCodeSetList != null) {
+					SelectItem item = null;
+					for (PackDTO packDTO : packCodeSetList) {
+						item = new SelectItem(packDTO.getPackCodeSetID(), packDTO.getPackCodeSetName());
+						packageList.add(item);
+						packageMap.put(Integer.valueOf(packDTO.getPackCodeSetID()).toString(), packDTO);
+					}
+					setPackageMap(packageMap);
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(errorResourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		
+		LOGGER.debug(" Exsited from promotionValueChanged service");
+	}
+
+	/**
+	 * Package value changed.
+	 *
+	 * @param event the event
+	 */
+	public void packageValueChanged(final ValueChangeEvent event) {
+		LOGGER.debug(" Entered packageValueChanged service");
+		try {
+			setGenerateCodeOutPut(null);
+			batchHistoryList.clear();
+			setPackStartDate(null);
+			setPackEndDate(null);
+			BatchVO batchVO = null;
+			List<BatchVO> batchVOs = null;
+
+			if (null != event.getNewValue()) {
+				String packageId = (String) event.getNewValue();
+				setPackageValue(packageId);
+				BatchsDTO batchDTO = GenerateCodeDelegator.getBatchHistories(packageId);
+				PackDTO packDTO = getPackageMap().get(packageId);
+				if (null != packDTO) {
+					setPackStartDate(packDTO.getStartDate());
+					setPackEndDate(packDTO.getEndDate());
+				}
+				List<BatchDTO> batchList = batchDTO.getaBatchs();
+				int siNumber = 0;
+				int sumofallCode = 0;
+
+				if (null != batchList && batchList.size() > 0) {
+					batchVOs = new ArrayList<BatchVO>(batchList.size());
+					for (BatchDTO batchDTO2 : batchList) {
+						batchVO = new BatchVO();
+						siNumber++;
+						sumofallCode += batchDTO2.getNoOfCodes();
+						batchVO.setBatchSINum(siNumber);
+						batchVO.setUserID(batchDTO2.getUserID());
+						batchVO.setNoOfCodes(batchDTO2.getNoOfCodes());
+						batchVO.setPackCodeSetID(batchDTO2.getPackCodeSetID());
+						batchVO.setGeneratedDate(new Date(batchDTO2.getGeneratedDate().getTimeInMillis()));
+						batchVO.setGeneratedBy(batchDTO2.getGeneratedBy());
+						batchVOs.add(batchVO);
+					}
+					setBatchHistoryList(batchVOs);
+					setCodeSum(sumofallCode);
+					setBatchSum(siNumber);
+				}
+
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(errorResourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		
+		LOGGER.debug(" Exsited from packageValueChanged service");
+	}
+
+	/**
+	 * Generate code submission.
+	 */
+	public void generateCodeSubmission() {
+		LOGGER.debug(" Entered generateCodeSubmission service");
+		try {
+			String promotionId = getPromotionValue();
+			String packageId = getPackageValue();
+			String gCodeValue = getCodeToGenerateValue();
+			if (StringUtils.isNotBlank(promotionId) && StringUtils.isNotBlank(packageId) && StringUtils.isNotBlank(gCodeValue)) {
+
+				GenerateCodeDTO igcdto = new GenerateCodeDTO();
+				igcdto.setPromotionId(promotionId);
+				igcdto.setPackCodeSetId(packageId);
+				igcdto.setNoOfCodes(gCodeValue);
+
+				GenerateCodeDTO aGenerateCodeOutPut = GenerateCodeDelegator.generateUPCodes(igcdto);
+				
+				if (aGenerateCodeOutPut != null && StringUtils.isNotBlank(aGenerateCodeOutPut.getStatusMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.SUCCESSMSG_CODE_GENERATION.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage("generateCodeForm:created", fm);
+				}
+				
+				
+
+				setCountryValue("0");
+				setPromotionValue("0");
+				setPackageValue("0");
+				batchHistoryList.clear();
+				packageList.clear();
+				promotionList.clear();
+				packStartDate = null;
+				packEndDate = null;
+				codeToGenerateValue = "";
+
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(errorResourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		
+		LOGGER.debug(" Exsited from generateCodeSubmission service");
+	}
+
+	/**
+	 * Gets the country names.
+	 *
+	 * @return the country names
+	 */
+	public HtmlSelectOneMenu getCountryNames() {
+		return countryNames;
+	}
+
+	/**
+	 * Sets the country names.
+	 *
+	 * @param iCountryNames the new country names
+	 */
+	public void setCountryNames(final HtmlSelectOneMenu iCountryNames) {
+		this.countryNames = iCountryNames;
+	}
+
+	/**
+	 * Gets the package list.
+	 *
+	 * @return the package list
+	 */
+	public List<SelectItem> getPackageList() {
+		return packageList;
+	}
+
+	/**
+	 * Sets the package list.
+	 *
+	 * @param iPackageList the new package list
+	 */
+	public void setPackageList(final List<SelectItem> iPackageList) {
+		this.packageList = iPackageList;
+	}
+
+	/**
+	 * Gets the batch history list.
+	 *
+	 * @return the batch history list
+	 */
+	public List<BatchVO> getBatchHistoryList() {
+		return batchHistoryList;
+	}
+
+	/**
+	 * Sets the batch history list.
+	 *
+	 * @param iBatchHistoryList the new batch history list
+	 */
+	public void setBatchHistoryList(final List<BatchVO> iBatchHistoryList) {
+		this.batchHistoryList = iBatchHistoryList;
+	}
+
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the brand value.
+	 *
+	 * @return the brand value
+	 */
+	public String getBrandValue() {
+		return brandValue;
+	}
+
+	/**
+	 * Sets the brand value.
+	 *
+	 * @param iBrandValue the new brand value
+	 */
+	public void setBrandValue(final String iBrandValue) {
+		this.brandValue = iBrandValue;
+	}
+
+	/**
+	 * Gets the promotion value.
+	 *
+	 * @return the promotion value
+	 */
+	public String getPromotionValue() {
+		return promotionValue;
+	}
+
+	/**
+	 * Sets the promotion value.
+	 *
+	 * @param iPromotionValue the new promotion value
+	 */
+	public void setPromotionValue(final String iPromotionValue) {
+		this.promotionValue = iPromotionValue;
+	}
+
+	/**
+	 * Gets the package value.
+	 *
+	 * @return the package value
+	 */
+	public String getPackageValue() {
+		return packageValue;
+	}
+
+	/**
+	 * Sets the package value.
+	 *
+	 * @param iPackageValue the new package value
+	 */
+	public void setPackageValue(final String iPackageValue) {
+		this.packageValue = iPackageValue;
+	}
+
+	/**
+	 * Gets the pack start date.
+	 *
+	 * @return the pack start date
+	 */
+	public Date getPackStartDate() {
+		return packStartDate;
+	}
+
+	/**
+	 * Sets the pack start date.
+	 *
+	 * @param iPackStartDate the new pack start date
+	 */
+	public void setPackStartDate(final Date iPackStartDate) {
+		this.packStartDate = iPackStartDate;
+	}
+
+	/**
+	 * Gets the pack end date.
+	 *
+	 * @return the pack end date
+	 */
+	public Date getPackEndDate() {
+		return packEndDate;
+	}
+
+	/**
+	 * Sets the pack end date.
+	 *
+	 * @param iPackEndDate the new pack end date
+	 */
+	public void setPackEndDate(final Date iPackEndDate) {
+		this.packEndDate = iPackEndDate;
+	}
+
+	/**
+	 * Gets the package map.
+	 *
+	 * @return the package map
+	 */
+	public Map<String, PackDTO> getPackageMap() {
+		return packageMap;
+	}
+
+	/**
+	 * Sets the package map.
+	 *
+	 * @param ipackageMap the ipackage map
+	 */
+	public void setPackageMap(final Map<String, PackDTO> ipackageMap) {
+		this.packageMap = ipackageMap;
+	}
+
+	/**
+	 * Gets the code to generate value.
+	 *
+	 * @return the code to generate value
+	 */
+	public String getCodeToGenerateValue() {
+		return codeToGenerateValue;
+	}
+
+	/**
+	 * Sets the code to generate value.
+	 *
+	 * @param iCodeToGenerateValue the new code to generate value
+	 */
+	public void setCodeToGenerateValue(final String iCodeToGenerateValue) {
+		this.codeToGenerateValue = iCodeToGenerateValue;
+	}
+
+	/**
+	 * Gets the generate code out put.
+	 *
+	 * @return the generate code out put
+	 */
+	public GenerateCodeDTO getGenerateCodeOutPut() {
+		return generateCodeOutPut;
+	}
+
+	/**
+	 * Sets the generate code out put.
+	 *
+	 * @param iGenerateCodeOutPut the new generate code out put
+	 */
+	public void setGenerateCodeOutPut(final GenerateCodeDTO iGenerateCodeOutPut) {
+		this.generateCodeOutPut = iGenerateCodeOutPut;
+	}
+
+	
+
+	/**
+	 * Gets the promotion list.
+	 *
+	 * @return the promotion list
+	 */
+	public List<SelectItem> getPromotionList() {
+		return promotionList;
+	}
+
+	/**
+	 * Sets the promotion list.
+	 *
+	 * @param iPromotionList the new promotion list
+	 */
+	public void setPromotionList(final List<SelectItem> iPromotionList) {
+		this.promotionList = iPromotionList;
+	}
+
+	
+	/**
+	 * Gets the code sum.
+	 *
+	 * @return the code sum
+	 */
+	public Integer getCodeSum() {
+		return codeSum;
+	}
+
+	/**
+	 * Sets the code sum.
+	 *
+	 * @param iCodeSum the new code sum
+	 */
+	public void setCodeSum(final Integer iCodeSum) {
+		this.codeSum = iCodeSum;
+	}
+
+	/**
+	 * Gets the batch sum.
+	 *
+	 * @return the batch sum
+	 */
+	public Integer getBatchSum() {
+		return batchSum;
+	}
+
+	/**
+	 * Sets the batch sum.
+	 *
+	 * @param iBatchSum the new batch sum
+	 */
+	public void setBatchSum(final Integer iBatchSum) {
+		this.batchSum = iBatchSum;
+	}
+}

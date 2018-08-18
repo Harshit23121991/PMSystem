@@ -1,0 +1,227 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class PromotionDTO.
+ */
+@XmlRootElement(name = "promotion", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("promotion")
+public class PromotionDTO implements Serializable {
+	// =================================================
+	// Class Variables
+	// =================================================
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 8761182207276505663L;
+
+	// =================================================
+	// Instance Variables
+	// =================================================
+
+	/** The promotion id. */
+	private int promotionID;
+
+	/** The promotion name. */
+	private String promotionName;
+
+	private String codePrefix;
+	
+	/** The country. */
+	private CountryDTO country;
+
+	/** The product type. */
+	private ProductTypeDTO productType;
+
+	/** The brand id. */
+	private int brandID;
+
+	/** The promotion code. */
+	private String promotionCode;
+
+	/** The is purging reqd. */
+	private boolean isPurgingReqd;
+
+	/** The purge no of days. */
+	private int purgeNoOfDays;
+	
+	/** The brands. */
+	private List<BrandDTO> brands;
+
+	
+	
+	/**
+	 * Gets the promotion code.
+	 *
+	 * @return the promotion code
+	 */
+	public String getPromotionCode() {
+		return promotionCode;
+	}
+
+	/**
+	 * Sets the promotion code.
+	 *
+	 * @param iPromotionCode the new promotion code
+	 */
+	public void setPromotionCode(final String iPromotionCode) {
+		this.promotionCode = iPromotionCode;
+	}
+
+	/**
+	 * Gets the promotion id.
+	 *
+	 * @return the promotion id
+	 */
+	public int getPromotionID() {
+		return promotionID;
+	}
+
+	/**
+	 * Sets the promotion id.
+	 *
+	 * @param iPromotionID the new promotion id
+	 */
+	public void setPromotionID(final int iPromotionID) {
+		this.promotionID = iPromotionID;
+	}
+
+	/**
+	 * Gets the promotion name.
+	 *
+	 * @return the promotion name
+	 */
+	public String getPromotionName() {
+		return promotionName;
+	}
+
+	/**
+	 * Sets the promotion name.
+	 *
+	 * @param iPromotionName the new promotion name
+	 */
+	public void setPromotionName(final String iPromotionName) {
+		this.promotionName = iPromotionName;
+	}
+	
+	/**
+	 * Gets the brand id.
+	 *
+	 * @return the brand id
+	 */
+	public int getBrandID() {
+		return brandID;
+	}
+
+	/**
+	 * Sets the brand id.
+	 *
+	 * @param iBrandID the new brand id
+	 */
+	public void setBrandID(final int iBrandID) {
+		this.brandID = iBrandID;
+	}
+
+	/**
+	 * Checks if is purging reqd.
+	 *
+	 * @return true, if is purging reqd
+	 */
+	public boolean isPurgingReqd() {
+		return isPurgingReqd;
+	}
+
+	/**
+	 * Sets the purging reqd.
+	 *
+	 * @param iIsPurgingReqd the new purging reqd
+	 */
+	public void setPurgingReqd(final boolean iIsPurgingReqd) {
+		this.isPurgingReqd = iIsPurgingReqd;
+	}
+
+	/**
+	 * Gets the purge no of days.
+	 *
+	 * @return the purge no of days
+	 */
+	public int getPurgeNoOfDays() {
+		return purgeNoOfDays;
+	}
+
+	/**
+	 * Sets the purge no of days.
+	 *
+	 * @param iPurgeNoOfDays the new purge no of days
+	 */
+	public void setPurgeNoOfDays(final int iPurgeNoOfDays) {
+		this.purgeNoOfDays = iPurgeNoOfDays;
+	}
+
+	/**
+	 * Gets the brands.
+	 *
+	 * @return the brands
+	 */
+	public List<BrandDTO> getBrands() {
+		return brands;
+	}
+
+	/**
+	 * Sets the brands.
+	 *
+	 * @param iBrands the new brands
+	 */
+	public void setBrands(final List<BrandDTO> iBrands) {
+		this.brands = iBrands;
+	}
+
+	/**
+	 * Gets the country.
+	 *
+	 * @return the country
+	 */
+	public CountryDTO getCountry() {
+		return country;
+	}
+
+	/**
+	 * Sets the country.
+	 *
+	 * @param iCountry the new country
+	 */
+	public void setCountry(final CountryDTO iCountry) {
+		this.country = iCountry;
+	}
+
+	/**
+	 * Gets the product type.
+	 *
+	 * @return the product type
+	 */
+	public ProductTypeDTO getProductType() {
+		return productType;
+	}
+
+	/**
+	 * Sets the product type.
+	 *
+	 * @param iProductType the new product type
+	 */
+	public void setProductType(final ProductTypeDTO iProductType) {
+		this.productType = iProductType;
+	}
+
+	public String getCodePrefix() {
+		return codePrefix;
+	}
+
+	public void setCodePrefix(final String iCodePrefix) {
+		this.codePrefix = iCodePrefix;
+	}
+}

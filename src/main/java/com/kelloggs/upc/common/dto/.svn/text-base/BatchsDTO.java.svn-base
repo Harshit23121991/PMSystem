@@ -1,0 +1,42 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+
+
+/**
+ * The Class BatchsDTO.
+ */
+@XmlRootElement(name = "batchs", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("batchs")
+public class BatchsDTO {
+	
+
+	/** The a batchs. */
+	private List<BatchDTO> aBatchs;
+	
+	/**
+	 * Gets the a batchs.
+	 *
+	 * @return the a batchs
+	 */
+	@XmlElement(name = "Batch")
+	public List<BatchDTO> getaBatchs() {
+		return aBatchs;
+	}
+
+	/**
+	 * Sets the a batchs.
+	 *
+	 * @param iBatchs the new a batchs
+	 */
+	public void setaBatchs(final List<BatchDTO> iBatchs) {
+		this.aBatchs = iBatchs;
+	}
+}

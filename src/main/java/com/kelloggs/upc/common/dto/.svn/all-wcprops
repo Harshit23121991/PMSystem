@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/scm/kelloggs_unique_pack_code/!svn/ver/1460/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto
+END
+ExceptionDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/ExceptionDTO.java
+END
+ResponseDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/ResponseDTO.java
+END
+PacksDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/PacksDTO.java
+END
+RoleDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/RoleDTO.java
+END
+UserDTOs.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/UserDTOs.java
+END
+DownloadCodeDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/DownloadCodeDTO.java
+END
+CountryDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/CountryDTO.java
+END
+MenuDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/MenuDTO.java
+END
+BatchsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/BatchsDTO.java
+END
+ProductTypesDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/ProductTypesDTO.java
+END
+RedemptionsInfoDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/RedemptionsInfoDTO.java
+END
+DownloadBatchDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/DownloadBatchDTO.java
+END
+BrandsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/BrandsDTO.java
+END
+PromotionsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/PromotionsDTO.java
+END
+AlternateCodeDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/AlternateCodeDTO.java
+END
+CountriesDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/CountriesDTO.java
+END
+PackDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/PackDTO.java
+END
+UserDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/UserDTO.java
+END
+ProductDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/scm/kelloggs_unique_pack_code/!svn/ver/1332/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/ProductDTO.java
+END
+BatchDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/BatchDTO.java
+END
+ProductTypeDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/ProductTypeDTO.java
+END
+RedemptionInfoDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/scm/kelloggs_unique_pack_code/!svn/ver/1354/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/RedemptionInfoDTO.java
+END
+UserRolesDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/UserRolesDTO.java
+END
+PackValidatorDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/PackValidatorDTO.java
+END
+ValidateCodeDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/ValidateCodeDTO.java
+END
+GenerateCodeDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/GenerateCodeDTO.java
+END
+BrandDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/BrandDTO.java
+END
+PromotionDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/scm/kelloggs_unique_pack_code/!svn/ver/1460/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/PromotionDTO.java
+END
+SignInDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/scm/kelloggs_unique_pack_code/!svn/ver/1313/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/common/dto/SignInDTO.java
+END

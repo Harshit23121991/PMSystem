@@ -1,0 +1,3 @@
+service.base.url = https://www.kelloggsupc.com/UPCService/rest
+auth.appid=kelloggsupc
+auth.key=kelloggsupc1@3

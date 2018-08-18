@@ -1,0 +1,118 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * The Class RedemptionInfoVO.
+ */
+public class RedemptionInfoVO {
+
+	/** The customer id. */
+	private String customerId;
+
+	/** The promotion. */
+	private List<String> promotion;
+
+	/** The pack code set. */
+	private List<String> packCodeSet;
+
+	/** The date of redemption. */
+	private List<Date> dateOfRedemption;
+
+	/** The header. */
+	private String header;
+
+	
+
+	/**
+	 * Gets the customer id.
+	 *
+	 * @return the customer id
+	 */
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	/**
+	 * Sets the customer id.
+	 *
+	 * @param iCustomerId the new customer id
+	 */
+	public void setCustomerId(final String iCustomerId) {
+		this.customerId = iCustomerId;
+	}
+
+	/**
+	 * Gets the header.
+	 *
+	 * @return the header
+	 */
+	public String getHeader() {
+		return header;
+	}
+
+	/**
+	 * Sets the header.
+	 *
+	 * @param iHeader the new header
+	 */
+	public void setHeader(final String iHeader) {
+		this.header = iHeader;
+	}
+
+	/**
+	 * Gets the promotion.
+	 *
+	 * @return the promotion
+	 */
+	public List<String> getPromotion() {
+		return promotion;
+	}
+
+	/**
+	 * Sets the promotion.
+	 *
+	 * @param iPromotion the new promotion
+	 */
+	public void setPromotion(final List<String> iPromotion) {
+		this.promotion = iPromotion;
+	}
+
+	/**
+	 * Gets the pack code set.
+	 *
+	 * @return the pack code set
+	 */
+	public List<String> getPackCodeSet() {
+		return packCodeSet;
+	}
+
+	/**
+	 * Sets the pack code set.
+	 *
+	 * @param iPackCodeSet the new pack code set
+	 */
+	public void setPackCodeSet(final List<String> iPackCodeSet) {
+		this.packCodeSet = iPackCodeSet;
+	}
+
+	/**
+	 * Gets the date of redemption.
+	 *
+	 * @return the date of redemption
+	 */
+	public List<Date> getDateOfRedemption() {
+		return dateOfRedemption;
+	}
+
+	/**
+	 * Sets the date of redemption.
+	 *
+	 * @param iDateOfRedemption the new date of redemption
+	 */
+	public void setDateOfRedemption(final List<Date> iDateOfRedemption) {
+		this.dateOfRedemption = iDateOfRedemption;
+	}
+
+}

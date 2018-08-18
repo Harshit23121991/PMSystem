@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="../js/jsfutility.js"></script>
+		<script type="text/javascript" src="../js/global.js"></script>
+		<script type="text/javascript" src="../js/jquery.simplemodal.js"></script>
+		<link rel="stylesheet" href="../css/global.css" media="screen" />
+		<!-- Enable IE8 Standards mode -->
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<SCRIPT type="text/javascript">		
+    //No back operation 
+	window.history.forward(-1);
+	function noBack() {
+		window.history.forward(-1);
+		if(history.length>0){
+			history.go(+1)
+		}
+	}
+	//Session time out
+	var initial;
+	var st = parseInt(#{session.maxInactiveInterval});
+	st = st*1000;
+	invocation();
+	function invocation() {
+	    initial = window.setTimeout( 
+	    function() {
+	    	userTimeOut();
+	    }, st);
+	}
+	$('.contentArea').live("click", function() {
+	   //Clear timer and re-invoke
+	    clearTimeout( initial );
+	    invocation();
+	});
+
+  </SCRIPT>
+	</h:head>
+	<div class="hmpgHeader">
+		<div class="hmpLogo">
+			<img class="logo" src="../img/logo_cluster.png" alt="Cluster" width="150px" height="70px" /><img
+				class="upcLogo" src="../img/global_header_headline.png"
+				alt="Unique pack code generator" />
+		</div>
+		<div class="loginStatusbox">
+			<div class="loginStatus">
+				<img class="personIcon" src="../img/icon_user.png" alt="Kelloggs" />
+				Welcome, <span id="hmpgUsername"><h:panelGroup
+						rendered="#{SignInBean.loggedIn}">
+						<h:outputText value=" #{SignInBean.loginDTO.userName}" />
+					</h:panelGroup></span> | <img class="logout" src="../img/icon_logout.png" alt="Kelloggs" />
+				<span id="logout"><h:form>
+						<h:commandLink action="#{SignInBean.logout}" value="Logout" />
+					</h:form></span>
+			</div>
+		</div>
+	</div>
+</ui:composition>

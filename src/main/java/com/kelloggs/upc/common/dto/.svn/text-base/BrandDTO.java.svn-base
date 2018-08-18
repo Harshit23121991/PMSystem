@@ -1,0 +1,174 @@
+/**
+ * 
+ */
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+/**
+ * @author brout
+ * 
+ */
+@XmlRootElement(name = "brand", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("brand")
+public class BrandDTO implements Serializable {
+	// =================================================
+	// Class Variables
+	// =================================================
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 2818020043212551189L;
+	// =================================================
+	// Instance Variables
+	// =================================================
+
+	/** The brand id. */
+	private int brandID;
+
+	/** The brand name. */
+	private String brandName;
+
+	/** The brand code. */
+	private String brandCode;
+
+	/** The country id. */
+	private int countryID;
+	
+	/** The message. */
+	private String message;
+	
+	/** The country. */
+	private CountryDTO country;
+
+	// =================================================
+	// Constructors
+	// =================================================
+	// =================================================
+	// Overridden Methods
+	// =================================================
+	// =================================================
+	// Class Methods
+	// =================================================
+	// =================================================
+	// Instance Methods
+	// =================================================
+	// =================================================
+	// Private Methods
+	// =================================================
+	// =================================================
+	// Accessors
+	// =================================================
+
+	/**
+	 * Gets the brand id.
+	 *
+	 * @return the brand id
+	 */
+	public int getBrandID() {
+		return brandID;
+	}
+
+	/**
+	 * Sets the brand id.
+	 *
+	 * @param iBrandID the new brand id
+	 */
+	public void setBrandID(final int iBrandID) {
+		this.brandID = iBrandID;
+	}
+
+	/**
+	 * Gets the brand name.
+	 *
+	 * @return the brand name
+	 */
+	public String getBrandName() {
+		return brandName;
+	}
+
+	/**
+	 * Sets the brand name.
+	 *
+	 * @param iBrandName the new brand name
+	 */
+	public void setBrandName(final String iBrandName) {
+		this.brandName = iBrandName;
+	}
+
+	/**
+	 * Gets the brand code.
+	 *
+	 * @return the brand code
+	 */
+	public String getBrandCode() {
+		return brandCode;
+	}
+
+	/**
+	 * Sets the brand code.
+	 *
+	 * @param iBrandCode the new brand code
+	 */
+	public void setBrandCode(final String iBrandCode) {
+		this.brandCode = iBrandCode;
+	}
+
+	/**
+	 * Gets the country id.
+	 *
+	 * @return the country id
+	 */
+	public int getCountryID() {
+		return countryID;
+	}
+
+	/**
+	 * Sets the country id.
+	 *
+	 * @param iCountryID the new country id
+	 */
+	public void setCountryID(final int iCountryID) {
+		this.countryID = iCountryID;
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message.
+	 *
+	 * @param iMessage the new message
+	 */
+	public void setMessage(final String iMessage) {
+		this.message = iMessage;
+	}
+	
+	/**
+	 * Gets the country.
+	 *
+	 * @return the country
+	 */
+	public CountryDTO getCountry() {
+		return country;
+	}
+
+	/**
+	 * Sets the country.
+	 *
+	 * @param iCountry the new country
+	 */
+	public void setCountry(final CountryDTO iCountry) {
+		this.country = iCountry;
+	}
+	
+
+}

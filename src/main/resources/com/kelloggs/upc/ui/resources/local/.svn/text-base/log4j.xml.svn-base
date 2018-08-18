@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//LOGGER" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration>
+ 
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out" />
+        <layout class="org.apache.log4j.PatternLayout">
+          <param name="ConversionPattern" value="%-5p [%c] %m %n" />
+        </layout>
+    </appender>
+     
+    <appender name="STDERR" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.err" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="[%d{ISO8601}] %-5p [%c] %m %n" />
+        </layout>
+    </appender>
+     
+    <appender name="SW_ROLLING_FILE"
+        class="org.apache.log4j.rolling.RollingFileAppender">
+       <param name="File" value="${jboss.server.log.dir}/UPC_UI.log" />
+       <param name="Append" value="true" />
+       <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+       		 <param name="FileNamePattern" value="${jboss.server.log.dir}/UPC_UI.%d{yyyy-MM-dd}.log" />       		 
+        </rollingPolicy>
+       <layout class="org.apache.log4j.PatternLayout">
+       	<param name="ConversionPattern"
+                value="[%d{ISO8601}] %C{1}:%M %-5p %m%n" />
+       </layout>	
+    </appender>
+ 
+    <logger name="com.kelloggs.upc" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="SW_ROLLING_FILE" /> 
+    </logger>
+         
+    <!-- ** -->
+     
+    <root>
+    	<priority value="info"></priority>
+        <appender-ref ref="SW_ROLLING_FILE" />
+    </root>
+ 
+ 
+</log4j:configuration>

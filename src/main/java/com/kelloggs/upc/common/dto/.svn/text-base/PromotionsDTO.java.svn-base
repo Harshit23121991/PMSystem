@@ -1,0 +1,65 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class PromotionsDTO.
+ */
+@XmlRootElement(name = "promotions", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("promotions")
+public class PromotionsDTO {
+
+	// =================================================
+	// Class Variables
+	// =================================================
+	// =================================================
+	// Instance Variables
+	// =================================================
+	
+	/** The a promotions. */
+	private List<PromotionDTO> aPromotions;
+
+	// =================================================
+	// Constructors
+	// =================================================
+	// =================================================
+	// Overridden Methods
+	// =================================================
+	// =================================================
+	// Class Methods
+	// =================================================
+	// =================================================
+	// Instance Methods
+	// =================================================
+	// =================================================
+	// Private Methods
+	// =================================================
+	// =================================================
+	// Accessors
+	// =================================================
+	/**
+	 * Gets the a promotions.
+	 *
+	 * @return the a promotions
+	 */
+	@XmlElement(name = "Promotion")
+	public List<PromotionDTO> getaPromotions() {
+		return aPromotions;
+	}
+
+	/**
+	 * Sets the a promotions.
+	 *
+	 * @param iPromotions the new a promotions
+	 */
+	public void setaPromotions(final List<PromotionDTO> iPromotions) {
+		this.aPromotions = iPromotions;
+	}
+
+}

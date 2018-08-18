@@ -1,0 +1,115 @@
+package com.kelloggs.upc.common.dto;
+
+import java.io.Serializable;
+import java.util.Map;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class MenuDTO.
+ */
+@XmlRootElement(name = "menu", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("menu")
+public class MenuDTO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** The menu id. */
+	private int menuId;
+	
+	/** The menu name. */
+	private String menuName;
+	
+	/** The sub menu. */
+	private Map<Integer, String> subMenu;
+	
+	/**
+	 * Gets the menu id.
+	 *
+	 * @return the menu id
+	 */
+	public int getMenuId() {
+		return menuId;
+	}
+	
+	/**
+	 * Sets the menu id.
+	 *
+	 * @param iMenuId the new menu id
+	 */
+	public void setMenuId(final int iMenuId) {
+		this.menuId = iMenuId;
+	}
+	
+	/**
+	 * Gets the menu name.
+	 *
+	 * @return the menu name
+	 */
+	public String getMenuName() {
+		return menuName;
+	}
+	
+	/**
+	 * Sets the menu name.
+	 *
+	 * @param iMenuName the new menu name
+	 */
+	public void setMenuName(final String iMenuName) {
+		this.menuName = iMenuName;
+	}
+	
+	/**
+	 * Gets the sub menu.
+	 *
+	 * @return the sub menu
+	 */
+	public Map<Integer, String> getSubMenu() {
+		return subMenu;
+	}
+	
+	/**
+	 * Sets the sub menu.
+	 *
+	 * @param iSubMenu the i sub menu
+	 */
+	public void setSubMenu(final Map<Integer, String> iSubMenu) {
+		this.subMenu = iSubMenu;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object arg0) {
+		if (arg0 == null) {
+			return false;
+		}
+		if (!(arg0 instanceof MenuDTO)) {
+			return false;
+		}
+		MenuDTO arg1 = (MenuDTO) arg0;
+		return (this.menuId == arg1.getMenuId()) && (arg1.getMenuName().equals(this.menuName));
+
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		int code = 0;
+		code += menuId;
+		if (menuName != null) {
+			code += menuName.hashCode();
+		}
+		return code;
+	}
+
+}

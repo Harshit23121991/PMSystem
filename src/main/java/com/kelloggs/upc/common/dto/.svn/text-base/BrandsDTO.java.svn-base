@@ -1,0 +1,61 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * The Class BrandsDTO.
+ */
+@XmlRootElement(name = "brands", namespace = "com.kelloggs.upc.common.dto")
+//@XStreamAlias("brands")
+public class BrandsDTO {
+	// =================================================
+	// Class Variables
+	// =================================================
+	// =================================================
+	// Instance Variables
+	// =================================================
+	//@XmlElement(name = "Brand")
+	/** The a brands. */
+	private List<BrandDTO> aBrands;
+
+	// =================================================
+	// Constructors
+	// =================================================
+	// =================================================
+	// Overridden Methods
+	// =================================================
+	// =================================================
+	// Class Methods
+	// =================================================
+	// =================================================
+	// Instance Methods
+	// =================================================
+	// =================================================
+	// Private Methods
+	// =================================================
+	// =================================================
+	// Accessors
+	// =================================================
+	/**
+	 * Gets the a brands.
+	 *
+	 * @return the a brands
+	 */
+	@XmlElement(name = "Brand")
+	public List<BrandDTO> getaBrands() {
+		return aBrands;
+	}
+
+	/**
+	 * Sets the a brands.
+	 *
+	 * @param iBrands the new a brands
+	 */
+	public void setaBrands(final List<BrandDTO> iBrands) {
+		this.aBrands = iBrands;
+	}
+
+}

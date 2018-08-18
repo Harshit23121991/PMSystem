@@ -1,0 +1,383 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import static com.kelloggs.upc.ui.common.UPCConstants.BUFFER_SIZE;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.PromotionDTO;
+import com.kelloggs.upc.common.dto.PromotionsDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.delegator.ReportDelegator;
+
+/**
+ * The Class ReportBean.
+ */
+@ManagedBean(name = "reportBean")
+@ViewScoped
+public class ReportBean extends BaseBean {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The Constant LOGGER. */
+	static final Logger LOGGER = Logger.getLogger(ReportBean.class);
+	static final String NO_DAT_FOUND_IN_FILE = resourceBundle.getString("EMPTY_REPORT");
+
+	// =================================================
+	// Accessors
+	// =================================================
+
+	/*
+	 * @ManagedProperty(value = "#{ApplicationBean}") private ApplicationBean applicationBean;
+	 */
+
+	/** The current type. */
+	private String currentType = "";
+
+	/** The country value. */
+	private String countryValue = "";
+
+	/** The promotion value. */
+	private String promotionValue = "";
+
+	/** The brand value. */
+	private String brandValue = "";
+
+	/** The from. */
+	private Date from;
+
+	/** The to. */
+	private Date to;
+
+	/** The fromdate. */
+	private String fromdate;
+
+	/** The todate. */
+	private String todate;
+	
+	private String reportErrorMessage;
+
+	// private List<SelectItem> countryList = new ArrayList<SelectItem>();
+
+	/** The promotion list. */
+	private List<SelectItem> promotionList = new ArrayList<SelectItem>();
+
+	/**
+	 * Gets the current type.
+	 *
+	 * @return the current type
+	 */
+	public String getCurrentType() {
+		return currentType;
+	}
+
+	/**
+	 * Sets the current type.
+	 *
+	 * @param iCurrentType the new current type
+	 */
+	public void setCurrentType(final String iCurrentType) {
+		this.currentType = iCurrentType;
+	}
+
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the promotion value.
+	 *
+	 * @return the promotion value
+	 */
+	public String getPromotionValue() {
+		return promotionValue;
+	}
+
+	/**
+	 * Sets the promotion value.
+	 *
+	 * @param iPromotionValue the new promotion value
+	 */
+	public void setPromotionValue(final String iPromotionValue) {
+		this.promotionValue = iPromotionValue;
+	}
+
+	
+
+	/**
+	 * Gets the promotion list.
+	 *
+	 * @return the promotion list
+	 */
+	public List<SelectItem> getPromotionList() {
+		return promotionList;
+	}
+
+	/**
+	 * Sets the promotion list.
+	 *
+	 * @param iPromotionList the new promotion list
+	 */
+	public void setPromotionList(final List<SelectItem> iPromotionList) {
+		this.promotionList = iPromotionList;
+	}
+
+	/**
+	 * Gets the brand value.
+	 *
+	 * @return the brand value
+	 */
+	public String getBrandValue() {
+		return brandValue;
+	}
+
+	/**
+	 * Sets the brand value.
+	 *
+	 * @param iBrandValue the new brand value
+	 */
+	public void setBrandValue(final String iBrandValue) {
+		this.brandValue = iBrandValue;
+	}
+
+	/**
+	 * Instantiates a new report bean.
+	 */
+	public ReportBean() {
+		// batchHistoryList.clear();
+		promotionList.clear();
+		// countryList.clear();
+	}
+
+	
+
+	/**
+	 * Country value changed.
+	 *
+	 * @param iEvent the i event
+	 */
+	public void countryValueChanged(final ValueChangeEvent iEvent) {
+		// batchHistoryList.clear();
+		try {
+			promotionList.clear();
+			if (null != iEvent.getNewValue()) {
+				String countryId = (String) iEvent.getNewValue();
+				setBrandValue(countryId);
+				PromotionsDTO promotionsDTO = ReportDelegator.getPromotions(countryId);
+				List<PromotionDTO> aPromotionList = promotionsDTO.getaPromotions();
+				// promotionList.add(new SelectItem("0", "--Select Promotion--"));
+
+				if (aPromotionList != null) {
+					for (int i = 0; i < aPromotionList.size(); i++) {
+						SelectItem item = new SelectItem(aPromotionList.get(i).getPromotionID(), aPromotionList.get(i).getPromotionName());
+
+						promotionList.add(item);
+					}
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(resourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+
+	}
+
+	/**
+	 * Downloadreport csv.
+	 *
+	 * @return the string
+	 */
+	public String downloadreportCSV() {
+
+		final String promotionid = getPromotionValue();
+		final String fromDate = getFromdate();
+		final String aTodate = getTodate();
+		final FacesContext facesContext = FacesContext.getCurrentInstance();
+		final ExternalContext externalContext = facesContext.getExternalContext();
+
+		BufferedOutputStream bos = null;
+		BufferedInputStream bis = null;
+		byte[] reportByes = null;
+		try {
+			
+		
+			
+			reportByes = ReportDelegator.getDownloadFileReport(promotionid, fromDate, aTodate);
+			if (reportByes != null) {
+				externalContext.setResponseContentType("text/csv");
+				externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"CustomerRedemptionReport_"+getFromdate()+"_To_"+getTodate()+".csv\"");
+				bis = new BufferedInputStream(new ByteArrayInputStream(reportByes), BUFFER_SIZE);
+				bos = new BufferedOutputStream(externalContext.getResponseOutputStream(), BUFFER_SIZE);
+				byte[] buffer = new byte[BUFFER_SIZE];
+				int charRead;
+				while ((charRead = bis.read(buffer)) != -1) {
+	
+					bos.write(buffer, 0, charRead);
+				}
+			}
+			if (null != null) {
+				bos.flush();
+			}
+		}  catch (FileNotFoundException e) {
+			LOGGER.error("FileStreamsReadnWrite: " + e);
+			FacesMessage aFacesMessage = new FacesMessage(errorResourceBundle.getString(UPCConstants.UPC_UI_SYSTEM_ERROR_KEY + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("reportForm:system", aFacesMessage);
+		} catch (IOException e) {
+			LOGGER.error("FileStreamsReadnWrite: " + e);
+			FacesMessage aFacesMessage = new FacesMessage(errorResourceBundle.getString(UPCConstants.UPC_UI_SYSTEM_ERROR_KEY + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("reportForm:system", aFacesMessage);
+		} catch (UPCApplicationException aUpcApplicationException) {
+			setReportErrorMessage(errorResourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			try {
+				if (reportByes == null) {
+					reportByes = NO_DAT_FOUND_IN_FILE.getBytes();
+					externalContext.setResponseContentType("text/csv");
+					externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"CustomerRedemptionReport_From_"+getFromdate()+"_To_"+getTodate()+".csv\"");
+					bis = new BufferedInputStream(new ByteArrayInputStream(reportByes), BUFFER_SIZE);
+					bos = new BufferedOutputStream(externalContext.getResponseOutputStream(), BUFFER_SIZE);
+					byte[] buffer = new byte[BUFFER_SIZE];
+					int charRead;
+					while ((charRead = bis.read(buffer)) != -1) {
+		
+						bos.write(buffer, 0, charRead);
+					}
+				}
+				} catch (Exception e) {
+					LOGGER.info("Exception :: No Data Found written to file ", e);
+				}
+			
+		}
+		finally {
+			try {
+				if (null != bos) {
+					bos.close();
+				}
+				if (null != bis) {
+					bis.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		FacesContext.getCurrentInstance().responseComplete(); 
+		return null;
+	}
+
+	/**
+	 * Gets the from.
+	 *
+	 * @return the from
+	 */
+	public Date getFrom() {
+		return from;
+	}
+
+	/**
+	 * Sets the from.
+	 *
+	 * @param iFrom the new from
+	 */
+	public void setFrom(final Date iFrom) {
+		this.from = iFrom;
+	}
+
+	/**
+	 * Gets the to.
+	 *
+	 * @return the to
+	 */
+	public Date getTo() {
+		return to;
+	}
+
+	/**
+	 * Sets the to.
+	 *
+	 * @param iTo the new to
+	 */
+	public void setTo(final Date iTo) {
+		this.to = iTo;
+	}
+
+	/**
+	 * Gets the fromdate.
+	 *
+	 * @return the fromdate
+	 */
+	public String getFromdate() {
+		return fromdate;
+	}
+
+	/**
+	 * Sets the fromdate.
+	 *
+	 * @param iFromdate the new fromdate
+	 */
+	public void setFromdate(final String iFromdate) {
+		this.fromdate = iFromdate;
+	}
+
+	/**
+	 * Gets the todate.
+	 *
+	 * @return the todate
+	 */
+	public String getTodate() {
+		return todate;
+	}
+
+	/**
+	 * Sets the todate.
+	 *
+	 * @param iTodate the new todate
+	 */
+	public void setTodate(final String iTodate) {
+		this.todate = iTodate;
+	}
+
+	public String getReportErrorMessage() {
+		return reportErrorMessage;
+	}
+
+	public void setReportErrorMessage(final String iReportErrorMessage) {
+		this.reportErrorMessage = iReportErrorMessage;
+	}
+
+}

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/scm/kelloggs_unique_pack_code/!svn/ver/1486/trunk/Development/Code/apps/UPC/src/main/resources/com/kelloggs/upc/ui/resources
+END
+SignIn.properties
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/scm/kelloggs_unique_pack_code/!svn/ver/1460/trunk/Development/Code/apps/UPC/src/main/resources/com/kelloggs/upc/ui/resources/SignIn.properties
+END
+SignInConvert.properties
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/scm/kelloggs_unique_pack_code/!svn/ver/152/trunk/Development/Code/apps/UPC/src/main/resources/com/kelloggs/upc/ui/resources/SignInConvert.properties
+END
+upcConfig.properties
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/scm/kelloggs_unique_pack_code/!svn/ver/209/trunk/Development/Code/apps/UPC/src/main/resources/com/kelloggs/upc/ui/resources/upcConfig.properties
+END
+ErrorMessage.properties
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/scm/kelloggs_unique_pack_code/!svn/ver/1426/trunk/Development/Code/apps/UPC/src/main/resources/com/kelloggs/upc/ui/resources/ErrorMessage.properties
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/scm/kelloggs_unique_pack_code/!svn/ver/68/trunk/Development/Code/apps/UPC/src/main/resources/com/kelloggs/upc/ui/resources/log4j.properties
+END

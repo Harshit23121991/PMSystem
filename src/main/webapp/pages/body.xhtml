@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" >
+
+	<div class="tabContainer">
+
+		<ul>
+
+			<ui:repeat value="#{SignInBean.completeUserMenuNames}" var="menuName">
+
+				<li id="#{menuName.id}"><h:outputText
+						value="#{menuName.displayName}" /></li>
+			</ui:repeat>
+		
+		</ul>
+
+	</div>
+	<div class="contentArea">
+
+
+		<h:panelGroup rendered="#{SignInBean.isTabVisible('GC')}">
+			<span id="GC_DISP" style="display: none" class="tab GC">
+				<div class="generateCodes">
+					<ui:include src="generateCode.xhtml" />
+				</div>
+			</span>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{SignInBean.isTabVisible('RC')}">
+			<span id="RC_DISP" style="display: none" class="tab RC">
+				<div class="generateCodes">
+					<ui:include src="downloadCode.xhtml" />
+				</div>
+
+			</span>
+		</h:panelGroup>
+
+
+		<h:panelGroup rendered="#{SignInBean.isTabVisible('VC')}">
+			<span id="VC_DISP" style="display: none" class="tab VC">
+				<div class="generateCodes">
+					<ui:include src="validatecode.xhtml" />
+				</div>
+
+			</span>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{SignInBean.isTabVisible('RI')}">
+			<span id="RI_DISP" style="display: none" class="tab RI">
+				<div class="generateCodes">
+					<ui:include src="redemptionInfo.xhtml" />
+				</div>
+
+			</span>
+		</h:panelGroup>
+		
+			<h:panelGroup rendered="#{SignInBean.isTabVisible('RE')}">
+			<span id="RE_DISP" style="display: none" class="tab RE">
+				<div class="generateCodes">
+					<ui:include src="report.xhtml" />
+				</div>
+
+			</span>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{SignInBean.isTabVisible('MN')}">
+			<span id="MN_DISP" style="display: none" class="tab MN">
+				<div class="secondaryTabs">
+					<ul>
+					<ui:repeat value="#{SignInBean.subMenuNames}" var="subMenuName">
+						<li ><a id="#{subMenuName.id}"  href="#">#{subMenuName.displayName}</a></li>
+					</ui:repeat>
+					</ul>
+				</div>
+			<h:panelGroup  rendered="#{SignInBean.isSubMenuVisible('MN','User')}">	
+				<span id="User_DISP" style="display: none" class="sectab User">
+					<div class="generateCodes">
+						<ui:include src="usermanagement.xhtml" />
+					</div>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup  rendered="#{SignInBean.isSubMenuVisible('MN','Brand')}">	
+				<span id="Brand_DISP" style="display: none" class="sectab Brand">
+					<div class="generateCodes">
+					<ui:include src="brandManagement.xhtml" />  
+					</div>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup  rendered="#{SignInBean.isSubMenuVisible('MN','Promotion')}">	
+				<span id="Promotion_DISP" style="display: none" class="sectab Promotion">
+					<div class="generateCodes">
+						<ui:include src="promotionmanagement.xhtml" />
+					</div>
+				</span>
+			</h:panelGroup>
+			<h:panelGroup  rendered="#{SignInBean.isSubMenuVisible('MN','PackCodeSet')}">	
+			    <span id="PackCodeSet_DISP" style="display: none" class="sectab PackCodeSet">
+					<div class="generateCodes">
+						<ui:include src="packCodeSet.xhtml" />  
+					</div>
+				</span>
+			</h:panelGroup>
+			
+			</span>
+		</h:panelGroup>
+
+	</div>
+
+</ui:composition>
+
+
+
+

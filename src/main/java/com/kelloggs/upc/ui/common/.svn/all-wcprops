@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/scm/kelloggs_unique_pack_code/!svn/ver/1460/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/common
+END
+RestrictPageFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/scm/kelloggs_unique_pack_code/!svn/ver/1407/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/common/RestrictPageFilter.java
+END
+UPCConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/scm/kelloggs_unique_pack_code/!svn/ver/1460/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/common/UPCConstants.java
+END
+UPCApplicationException.java
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/scm/kelloggs_unique_pack_code/!svn/ver/1314/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/common/UPCApplicationException.java
+END
+UPCApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/scm/kelloggs_unique_pack_code/!svn/ver/1359/trunk/Development/Code/apps/UPC/src/main/java/com/kelloggs/upc/ui/common/UPCApplication.java
+END

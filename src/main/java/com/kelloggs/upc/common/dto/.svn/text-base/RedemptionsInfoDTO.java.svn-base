@@ -1,0 +1,39 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class RedemptionsInfoDTO.
+ */
+@XmlRootElement(name = "RedemptionsInfo", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("RedemptionsInfo")
+public class RedemptionsInfoDTO {
+
+	/** The redemption info. */
+	private List<RedemptionInfoDTO> redemptionInfo;
+
+	/**
+	 * Gets the redemption info.
+	 *
+	 * @return the redemption info
+	 */
+	@XmlElement(name = "RedemptionInfo")
+	public List<RedemptionInfoDTO> getRedemptionInfo() {
+		return redemptionInfo;
+	}
+
+	/**
+	 * Sets the redemption info.
+	 *
+	 * @param iRedemptionInfo the new redemption info
+	 */
+	public void setRedemptionInfo(final List<RedemptionInfoDTO> iRedemptionInfo) {
+		this.redemptionInfo = iRedemptionInfo;
+	}
+}

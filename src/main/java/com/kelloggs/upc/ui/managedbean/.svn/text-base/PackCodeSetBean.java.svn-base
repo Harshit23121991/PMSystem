@@ -1,0 +1,1331 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.BrandDTO;
+import com.kelloggs.upc.common.dto.BrandsDTO;
+import com.kelloggs.upc.common.dto.CountryDTO;
+import com.kelloggs.upc.common.dto.PackDTO;
+import com.kelloggs.upc.common.dto.PacksDTO;
+import com.kelloggs.upc.common.dto.ProductDTO;
+import com.kelloggs.upc.common.dto.ProductTypeDTO;
+import com.kelloggs.upc.common.dto.PromotionDTO;
+import com.kelloggs.upc.common.dto.PromotionsDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.common.util.DateConversion;
+import com.kelloggs.upc.ui.delegator.PackCodeDelegate;
+import com.kelloggs.upc.ui.delegator.ReportDelegator;
+
+import static com.kelloggs.upc.ui.common.UPCConstants.EMPTY_STRING;
+import static com.kelloggs.upc.ui.common.UPCConstants.DATE_PATTERN_DD_MM_YYYY;
+
+/**
+ * The Class PackCodeSetBean.
+ */
+@ManagedBean(name = "packcodeManageBean")
+@ViewScoped
+public class PackCodeSetBean extends BaseBean {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getLogger(PackCodeSetBean.class);
+
+	/** The Constant SEARCH_ALL_PACKS. */
+	private static final String SEARCH_ALL_PACKS = "";
+	
+	/** The Constant RECORD_PER_PAGE. */
+	private static final int RECORD_PER_PAGE = 20;
+	
+	/** The country search value. */
+	private String countrySearchValue = "0";
+
+	/** The promotion search value. */
+	private String promotionSearchValue = "0";
+
+	/** The brand value. */
+	private String brandValue = "";
+
+	/** The packcode. */
+	private String packcode = EMPTY_STRING;
+
+	/** The brand id. */
+	private String brandID;
+
+	// private List<SelectItem> countryList = new ArrayList<SelectItem>();
+
+	/** The promotion list. */
+	private List<SelectItem> promotionList = new ArrayList<SelectItem>();
+
+	/** The brand list. */
+	private List<SelectItem> brandList = new ArrayList<SelectItem>();
+
+	/** The package list. */
+	private List<SelectItem> packageList = new ArrayList<SelectItem>();
+
+	/** The pack list. */
+	private List<PackDTO> packList = new ArrayList<PackDTO>();
+
+	/** The pack code set name. */
+	private String packCodeSetName;
+
+	/** The prod id. */
+	private String prodId;
+
+	/** The date active. */
+	private String dateActive;
+
+	/** The date in active. */
+	private String dateInActive;
+
+	/** The promotion id. */
+	private String promotionId;
+
+	/** The country id. */
+	private String countryId;
+
+	/** The country value. */
+	private String countryValue = "";
+
+	/** The promotion value. */
+	private String promotionValue = "";
+
+	/** The package value. */
+	private String packageValue = "";
+
+	/** The hdn pack code id. */
+	private String hdnPackCodeId;
+
+	/** The fromdate. */
+	private String fromdate;
+
+	/** The todate. */
+	private String todate;
+
+	/** The header. */
+	private String header;
+
+	/** The packcodevalue. */
+	private String packcodevalue;
+	
+	/** The hdncountry value. */
+	private String hdncountryValue = "";
+	
+	/** The hdnpromotion id value. */
+	private String hdnpromotionIdValue = "";
+	
+	/** The dlthdn pack id value. */
+	private String dlthdnPackIdValue = "";
+
+	/** The on promo prod id input value. */
+	private String onPromoProdIdInputValue = "";
+	// private static ResourceBundle resourceBundle = null;
+	/** The brand map. */
+	private Map<String, BrandDTO> brandMap = new HashMap<String, BrandDTO>();
+	
+	/** The current page no. */
+	private int currentPageNo;
+	
+	private boolean disableDateFields;
+
+	/**
+	 * Gets the brand map.
+	 *
+	 * @return the brand map
+	 */
+	public Map<String, BrandDTO> getBrandMap() {
+		return brandMap;
+	}
+
+	/**
+	 * Sets the brand map.
+	 *
+	 * @param iBrandMap the i brand map
+	 */
+	public void setBrandMap(final Map<String, BrandDTO> iBrandMap) {
+		this.brandMap = iBrandMap;
+	}
+
+	static {
+		LOGGER.info(" Intialize once upon class load");
+	}
+
+	/**
+	 * Gets the brand list.
+	 *
+	 * @return the brand list
+	 */
+	public List<SelectItem> getBrandList() {
+		return brandList;
+	}
+
+	/**
+	 * Sets the brand list.
+	 *
+	 * @param iBrandList the new brand list
+	 */
+	public void setBrandList(final List<SelectItem> iBrandList) {
+		this.brandList = iBrandList;
+	}
+
+	/**
+	 * Gets the pack list.
+	 *
+	 * @return the pack list
+	 */
+	public List<PackDTO> getPackList() {
+		return packList;
+	}
+
+	/**
+	 * Sets the pack list.
+	 *
+	 * @param iPackList the new pack list
+	 */
+	public void setPackList(final List<PackDTO> iPackList) {
+		this.packList = iPackList;
+	}
+
+	/**
+	 * Gets the packcodevalue.
+	 *
+	 * @return the packcodevalue
+	 */
+	public String getPackcodevalue() {
+		return packcodevalue;
+	}
+
+	/**
+	 * Sets the packcodevalue.
+	 *
+	 * @param iPackcodevalue the new packcodevalue
+	 */
+	public void setPackcodevalue(final String iPackcodevalue) {
+		this.packcodevalue = iPackcodevalue;
+	}
+
+	/**
+	 * Gets the brand value.
+	 *
+	 * @return the brand value
+	 */
+	public String getBrandValue() {
+		return brandValue;
+	}
+
+	/**
+	 * Sets the brand value.
+	 *
+	 * @param iBrandValue the new brand value
+	 */
+	public void setBrandValue(final String iBrandValue) {
+		this.brandValue = iBrandValue;
+	}
+
+	/**
+	 * Gets the country search value.
+	 *
+	 * @return the country search value
+	 */
+	public String getCountrySearchValue() {
+		return countrySearchValue;
+	}
+
+	/**
+	 * Sets the country search value.
+	 *
+	 * @param iCountrySearchValue the new country search value
+	 */
+	public void setCountrySearchValue(final String iCountrySearchValue) {
+		this.countrySearchValue = iCountrySearchValue;
+	}
+
+	/**
+	 * Gets the promotion search value.
+	 *
+	 * @return the promotion search value
+	 */
+	public String getPromotionSearchValue() {
+		return promotionSearchValue;
+	}
+
+	/**
+	 * Sets the promotion search value.
+	 *
+	 * @param iPromotionSearchValue the new promotion search value
+	 */
+	public void setPromotionSearchValue(final String iPromotionSearchValue) {
+		this.promotionSearchValue = iPromotionSearchValue;
+	}
+
+	/**
+	 * Gets the packcode.
+	 *
+	 * @return the packcode
+	 */
+	public String getPackcode() {
+		return packcode;
+	}
+
+	/**
+	 * Sets the packcode.
+	 *
+	 * @param iPackcode the new packcode
+	 */
+	public void setPackcode(final String iPackcode) {
+		this.packcode = iPackcode;
+	}
+
+	
+
+	/**
+	 * Gets the promotion list.
+	 *
+	 * @return the promotion list
+	 */
+	public List<SelectItem> getPromotionList() {
+		return promotionList;
+	}
+
+	/**
+	 * Sets the promotion list.
+	 *
+	 * @param iPromotionList the new promotion list
+	 */
+	public void setPromotionList(final List<SelectItem> iPromotionList) {
+		this.promotionList = iPromotionList;
+	}
+
+	/**
+	 * Gets the package list.
+	 *
+	 * @return the package list
+	 */
+	public List<SelectItem> getPackageList() {
+		return packageList;
+	}
+
+	/**
+	 * Sets the package list.
+	 *
+	 * @param iPackageList the new package list
+	 */
+	public void setPackageList(final List<SelectItem> iPackageList) {
+		this.packageList = iPackageList;
+	}
+
+	/**
+	 * Gets the pack code set name.
+	 *
+	 * @return the pack code set name
+	 */
+	public String getPackCodeSetName() {
+		return packCodeSetName;
+	}
+
+	/**
+	 * Sets the pack code set name.
+	 *
+	 * @param iPackCodeSetName the new pack code set name
+	 */
+	public void setPackCodeSetName(final String iPackCodeSetName) {
+		this.packCodeSetName = iPackCodeSetName;
+	}
+
+	/**
+	 * Gets the prod id.
+	 *
+	 * @return the prod id
+	 */
+	public String getProdId() {
+		return prodId;
+	}
+
+	/**
+	 * Sets the prod id.
+	 *
+	 * @param iProdId the new prod id
+	 */
+	public void setProdId(final String iProdId) {
+		this.prodId = iProdId;
+	}
+
+	/**
+	 * Gets the date active.
+	 *
+	 * @return the date active
+	 */
+	public String getDateActive() {
+		return dateActive;
+	}
+
+	/**
+	 * Sets the date active.
+	 *
+	 * @param iDateActive the new date active
+	 */
+	public void setDateActive(final String iDateActive) {
+		this.dateActive = iDateActive;
+	}
+
+	/**
+	 * Gets the date in active.
+	 *
+	 * @return the date in active
+	 */
+	public String getDateInActive() {
+		return dateInActive;
+	}
+
+	/**
+	 * Sets the date in active.
+	 *
+	 * @param iDateInActive the new date in active
+	 */
+	public void setDateInActive(final String iDateInActive) {
+		this.dateInActive = iDateInActive;
+	}
+
+	/**
+	 * Gets the promotion id.
+	 *
+	 * @return the promotion id
+	 */
+	public String getPromotionId() {
+		return promotionId;
+	}
+
+	/**
+	 * Sets the promotion id.
+	 *
+	 * @param iPromotionId the new promotion id
+	 */
+	public void setPromotionId(final String iPromotionId) {
+		this.promotionId = iPromotionId;
+	}
+
+	/**
+	 * Gets the country id.
+	 *
+	 * @return the country id
+	 */
+	public String getCountryId() {
+		return countryId;
+	}
+
+	/**
+	 * Sets the country id.
+	 *
+	 * @param iCountryId the new country id
+	 */
+	public void setCountryId(final String iCountryId) {
+		this.countryId = iCountryId;
+	}
+
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the promotion value.
+	 *
+	 * @return the promotion value
+	 */
+	public String getPromotionValue() {
+		return promotionValue;
+	}
+
+	/**
+	 * Sets the promotion value.
+	 *
+	 * @param iPromotionValue the new promotion value
+	 */
+	public void setPromotionValue(final String iPromotionValue) {
+		this.promotionValue = iPromotionValue;
+	}
+
+	/**
+	 * Gets the package value.
+	 *
+	 * @return the package value
+	 */
+	public String getPackageValue() {
+		return packageValue;
+	}
+
+	/**
+	 * Sets the package value.
+	 *
+	 * @param iPackageValue the new package value
+	 */
+	public void setPackageValue(final String iPackageValue) {
+		this.packageValue = iPackageValue;
+	}
+
+	/**
+	 * Gets the fromdate.
+	 *
+	 * @return the fromdate
+	 */
+	public String getFromdate() {
+		return fromdate;
+	}
+
+	/**
+	 * Sets the fromdate.
+	 *
+	 * @param iFromdate the new fromdate
+	 */
+	public void setFromdate(final String iFromdate) {
+		this.fromdate = iFromdate;
+	}
+
+	/**
+	 * Gets the todate.
+	 *
+	 * @return the todate
+	 */
+	public String getTodate() {
+		return todate;
+	}
+
+	/**
+	 * Sets the todate.
+	 *
+	 * @param iTodate the new todate
+	 */
+	public void setTodate(final String iTodate) {
+		this.todate = iTodate;
+	}
+
+	/**
+	 * Gets the search all packs.
+	 *
+	 * @return the search all packs
+	 */
+	public static String getSearchAllPacks() {
+		return SEARCH_ALL_PACKS;
+	}
+
+	/**
+	 * Gets the header.
+	 *
+	 * @return the header
+	 */
+	public String getHeader() {
+		return header;
+	}
+
+	/**
+	 * Sets the header.
+	 *
+	 * @param iHeader the new header
+	 */
+	public void setHeader(final String iHeader) {
+		this.header = iHeader;
+	}
+
+	/**
+	 * Instantiates a new pack code set bean.
+	 */
+	public PackCodeSetBean() {
+
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.kelloggs.upc.ui.managedbean.BaseBean#init()
+	 */
+	@PostConstruct
+    public void init() {   
+		
+		searchPacks();
+		
+	}
+	/*
+	 * countryList.clear(); SelectItem item = new SelectItem("", "");
+	 * 
+	 * // Getting all countries from application scope CountriesDTO countriesDTO
+	 * = (CountriesDTO) FacesContext
+	 * .getCurrentInstance().getExternalContext().getApplicationMap()
+	 * .get("countriesDTO");
+	 * 
+	 * countryList.add(new SelectItem("0", "--Select Country--"));
+	 * 
+	 * for (int i = 0; i < countriesDTO.getaCountries().size(); i++) { item =
+	 * new SelectItem(countriesDTO.getaCountries().get(i) .getCountryID(),
+	 * countriesDTO.getaCountries().get(i) .getCountryName());
+	 * countryList.add(item); }
+	 */
+
+	/**
+	 * Populate promotion.
+	 *
+	 * @param iCountryId the i country id
+	 */
+	private void populatePromotion(final String iCountryId) {
+		try {
+			final String acountryId = iCountryId;
+			promotionList.clear();
+			if (StringUtils.isNotBlank(acountryId)) {
+				 
+				PromotionsDTO promotionsDTO = ReportDelegator
+						.getPromotions(acountryId);
+
+				List<PromotionDTO> aPromotionList = promotionsDTO.getaPromotions();
+
+				//promotionList.add(new SelectItem("0", "Select"));
+
+				if (aPromotionList != null) {
+					for (int i = 0; i < aPromotionList.size(); i++) {
+						SelectItem item = new SelectItem(aPromotionList.get(i)
+								.getPromotionID() + ","
+								+ aPromotionList.get(i).getProductType()
+										.getProductTypeId(), aPromotionList.get(i)
+								.getPromotionName());
+
+						promotionList.add(item);
+					}
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(
+					resourceBundle.getString(aUpcApplicationException
+							.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage(
+					"userManagement:system", aFacesMessage);
+		}
+
+	}
+
+	/**
+	 * Country value changed.
+	 *
+	 * @param iEvent the i event
+	 */
+	public void countryValueChanged(final ValueChangeEvent iEvent) {
+		// batchHistoryList.clear();
+		try {
+			if (promotionList != null) {
+				promotionList.clear();
+			}
+			if (brandList != null) {
+				brandList.clear();
+			}
+			
+			if (null != iEvent.getNewValue()) {
+				String aCountryId = (String) iEvent.getNewValue();
+				setBrandValue(aCountryId);
+				PromotionsDTO promotionsDTO = ReportDelegator
+						.getPromotions(aCountryId);
+
+				List<PromotionDTO> aPromotionList = promotionsDTO.getaPromotions();
+
+				//promotionList.add(new SelectItem("0", "Select"));
+
+				if (aPromotionList != null) {
+					for (int i = 0; i < aPromotionList.size(); i++) {
+						SelectItem item = new SelectItem(aPromotionList.get(i)
+								.getPromotionID()
+								+ ","
+								+ aPromotionList.get(i).getProductType()
+										.getProductTypeId(), aPromotionList.get(i)
+								.getPromotionName());
+
+						promotionList.add(item);
+					}
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(resourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		
+	}
+
+	/**
+	 * Brand value changed.
+	 *
+	 * @param iEvent the i event
+	 */
+	public void brandValueChanged(final ValueChangeEvent iEvent) {
+		LOGGER.debug(" Entered brandValueChanged ");
+		try {
+
+			if (brandMap != null) {
+				brandMap.clear();
+			}
+ 			if (brandList != null) {
+				brandList.clear();
+			}
+			
+			String promoprodValue = "";
+			String productId = "";
+			if (null != iEvent.getNewValue()) {
+				promoprodValue = (String) iEvent.getNewValue();
+				if (promoprodValue != null) {
+					if (promoprodValue.contains(",")) {
+						promotionId = promoprodValue.split(",")[0];
+						productId = promoprodValue.split(",")[1];
+					} else {
+						promotionId = promoprodValue.split(",")[0];
+					}
+					
+				}
+				
+				setOnPromoProdIdInputValue(productId);
+				setBrandValue(promotionId);
+				BrandsDTO brandsdto = PackCodeDelegate.getBrands(promotionId);
+
+				List<BrandDTO> abrandList = brandsdto.getaBrands();
+				//brandList.add(new SelectItem("0", "Select"));
+
+				if (abrandList != null) {
+					for (int i = 0; i < abrandList.size(); i++) {
+						SelectItem item = new SelectItem(abrandList.get(i)
+								.getBrandID(), abrandList.get(i).getBrandName());
+						brandList.add(item);
+						brandMap.put(
+								Integer.valueOf(abrandList.get(i).getBrandID())
+										.toString(), abrandList.get(i));
+
+					}
+					setBrandMap(brandMap);
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(resourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		LOGGER.debug(" Existed from brandValueChanged ");
+	}
+
+	// Create new PackCode(overlay)
+	/**
+	 * Creates the new pack code.
+	 */
+	public void createNewPackCode() {
+
+		PackCodeDelegate packCodeDelegate = null;
+
+		final String aCountryId = getCountryValue();
+		final String promotion = getPromotionValue();
+		final String brandId = getBrandValue();
+		final String packCode = getPackcodevalue();
+		final String skuId = getProdId();
+		final String fromDate = getFromdate();
+		final String toDate = getTodate();
+
+		BrandDTO iBrandDTO = null;
+		PackDTO iPackDTO = null;
+		ProductTypeDTO iProductTypeDTO = null;
+		CountryDTO icountryDTO = null;
+		PromotionDTO iPromotionDTO = null;
+
+		PackDTO oPackDTO = null;
+		if (StringUtils.isNotBlank(aCountryId)
+				&& StringUtils.isNotBlank(promotion)
+				&& StringUtils.isNotBlank(brandId)
+				&& StringUtils.isNotBlank(packCode)			
+				&& StringUtils.isNotBlank(fromDate)
+				&& StringUtils.isNotBlank(toDate)) {
+
+			iBrandDTO = new BrandDTO();
+			icountryDTO = new CountryDTO();
+			iProductTypeDTO = new ProductTypeDTO();
+			iPromotionDTO = new PromotionDTO();
+			iPackDTO = new PackDTO();
+
+			icountryDTO.setCountryID(Integer.parseInt(aCountryId));
+			iPackDTO.setCountry(icountryDTO);
+			int promoId = 0;
+			
+			if (null != promotion) {
+				if (promotion.contains(",")) {
+					promoId = (Integer.parseInt(promotion.split(",")[0]));
+				} else {
+					promoId = (Integer.parseInt(promotion.split(",")[0]));
+				}
+			}
+			iPromotionDTO.setPromotionID(promoId);
+			// }
+			iPackDTO.setPromotion(iPromotionDTO);
+			iBrandDTO.setBrandID(Integer.parseInt(brandId));
+			 iPackDTO.setBrand(iBrandDTO);
+			
+			iPackDTO.setPackCodeSetName(packCode);
+
+			ProductDTO productDTO = new ProductDTO();
+			productDTO.setProductId(skuId);
+			iPackDTO.setProduct(productDTO);
+
+			iPackDTO.setProductType(iProductTypeDTO);
+			iPackDTO.setStartDate(DateConversion.converterToDate(fromDate));
+			iPackDTO.setEndDate(DateConversion.converterToDate(toDate));
+
+			packCodeDelegate = new PackCodeDelegate();
+			try {
+				oPackDTO = packCodeDelegate.createPackCode(iPackDTO);
+				if (oPackDTO != null) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEPACKCODE_CREATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage(
+							"packCodemanageForm:packCreateMessage", fm);
+				}
+				searchPacks();
+
+			} catch (UPCApplicationException e) {
+				LOGGER.error(" Error Occured in creating packcode "
+						+ e.getMessage());
+				LOGGER.error(" Key ::: " + e.getErrorKey() + " Value ::: "
+						+ e.getErrorMessage());
+			} catch (RuntimeException ex) {
+				LOGGER.error(ex);
+			}
+
+		}
+
+	}
+
+	// search promotion Id and packcode set name based brands
+	/**
+	 * Search pack code name list.
+	 */
+	public void searchPackCodeNameList() {
+
+		final String searchPromotionValue = getPromotionSearchValue();
+		final String searchpackCode = getPackcode();
+
+		PackCodeDelegate packCodeDelegate = null;
+		PackDTO iPackDTO = null;
+		PacksDTO oPacksDTO = null;
+
+		PromotionDTO iPromotion = null;
+		try {
+			if (StringUtils.isNotBlank(searchpackCode)) {
+
+				packCodeDelegate = new PackCodeDelegate();
+				iPromotion = new PromotionDTO();
+			
+				iPackDTO = new PackDTO();
+				iPackDTO.setPackCodeSetName(searchpackCode);
+				/*
+				 * iPromotion.setPromotionID(Integer.parseInt(searchPromotionValue
+				 * )); iPackDTO.setPromotion(iPromotion) ;
+				 */
+				oPacksDTO = packCodeDelegate.searchpacks(iPackDTO);
+				setPackList(oPacksDTO.getaPacks());
+			}
+
+			if (StringUtils.isNotBlank(searchPromotionValue)) {
+
+				packCodeDelegate = new PackCodeDelegate();
+				iPromotion = new PromotionDTO();
+				iPackDTO = new PackDTO();
+				iPackDTO.setPackCodeSetName(searchpackCode);
+				String[] aPromotionId = searchPromotionValue.split(",");
+				
+				int	promoId = (Integer.parseInt(aPromotionId[0]));
+				
+					
+				iPromotion.setPromotionID(promoId);
+				iPackDTO.setPromotion(iPromotion);
+				oPacksDTO = packCodeDelegate.searchpacks(iPackDTO);
+				setPackList(oPacksDTO.getaPacks());
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.error(e);
+		}
+
+	}
+	
+	
+	/**
+	 * Search packs.
+	 */
+	public void searchPacks() {
+		
+		final String searchPromotionValue = getPromotionSearchValue();
+		final String searchpackCode = getPackcode();
+		final String countryIdStr = getCountrySearchValue(); 
+		
+		PackCodeDelegate packCodeDelegate = null;
+		PackDTO iPackDTO = null;
+		PacksDTO oPacksDTO = null;
+		PromotionDTO iPromotion = null;
+		
+		try {
+			
+				iPromotion = new PromotionDTO();
+				
+				int promoId = 0;
+				if (searchPromotionValue != "0") {
+					String[] aPromotionId = searchPromotionValue.split(",");
+					promoId = (Integer.parseInt(aPromotionId[0]));
+				}
+				
+				iPromotion.setPromotionID(promoId);
+				
+				
+				iPackDTO = new PackDTO();
+				iPackDTO.setPackCodeSetName(searchpackCode);
+				iPackDTO.setPromotion(iPromotion);
+				
+				CountryDTO countryDTO = new CountryDTO();
+				countryDTO.setCountryID(Integer.parseInt(countryIdStr));
+				iPackDTO.setCountry(countryDTO);
+				
+				packCodeDelegate = new PackCodeDelegate();
+				oPacksDTO = packCodeDelegate.searchpacks(iPackDTO);
+				setPackList(oPacksDTO.getaPacks());
+			
+		} catch (UPCApplicationException e) {
+			packList.clear();
+		}
+		
+		
+	}
+	
+	
+	// List of Packcodes display (by default)
+	/**
+	 * Search all packs.
+	 */
+	public void searchAllPacks() {
+
+		PackCodeDelegate packCodeDelegate = null;
+		PackDTO iPackDTO = null;
+		PacksDTO oPacksDTO = null;
+
+		try {
+			if (StringUtils.isEmpty(getPromotionSearchValue())
+					&& StringUtils.isEmpty(getPackcode())) {
+				packCodeDelegate = new PackCodeDelegate();
+
+				iPackDTO = new PackDTO();
+				iPackDTO.setPackCodeSetName(SEARCH_ALL_PACKS);
+				oPacksDTO = packCodeDelegate.searchpacks(iPackDTO);
+				setPackList(oPacksDTO.getaPacks());
+			}
+		} catch (UPCApplicationException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+
+	// populating date while updating
+	/**
+	 * Populate existing packs.
+	 *
+	 * @param iPackDTO the i pack dto
+	 */
+	public void populateExistingPacks(final PackDTO iPackDTO) {
+		PackDTO afinalPackDTO = iPackDTO;
+		int position = 0;
+		if (packList != null && packList.size() > 0) {
+			for (PackDTO apPackDTO : packList) {
+				if (apPackDTO.getPackCodeSetID() == iPackDTO.getPackCodeSetID()) {
+					break;
+				} else {
+					position++;
+				}
+			}
+		}
+		if (currentPageNo > 1) {
+			afinalPackDTO = packList
+					.get((RECORD_PER_PAGE * (currentPageNo - 1)) + position);
+		}
+		if (null != iPackDTO.getCountry()) {
+			populatePromotion(String.valueOf(afinalPackDTO.getCountry()
+					.getCountryID()));
+			setCountryValue(String.valueOf(afinalPackDTO.getCountry().getCountryID()));
+	    }
+		if (null != afinalPackDTO.getPromotion()) {
+			populateBrand(String.valueOf(afinalPackDTO.getPromotion().getPromotionID()));
+			setPromotionValue(String.valueOf(afinalPackDTO.getPromotion()
+					.getPromotionID()) + "," + afinalPackDTO.getProductType().getProductTypeId());
+		}
+		setBrandValue(String.valueOf(afinalPackDTO.getBrand().getBrandID()));          
+		setPackcodevalue(afinalPackDTO.getPackCodeSetName());
+		setProdId(String.valueOf(afinalPackDTO.getProduct().getProductId()));
+		setOnPromoProdIdInputValue(String.valueOf(afinalPackDTO.getProductType().getProductTypeId()));
+		
+		try {
+			setFromdate(DateConversion.converterDateToString(
+					afinalPackDTO.getStartDate(), DATE_PATTERN_DD_MM_YYYY));
+
+			setTodate(DateConversion.converterDateToString(
+					afinalPackDTO.getEndDate(), DATE_PATTERN_DD_MM_YYYY));
+			if (null != afinalPackDTO
+					&& afinalPackDTO.getEndDate() != null
+					&& DateConversion.getEndOfDayDate().after(
+							afinalPackDTO.getEndDate())) {
+              setDisableDateFields(true);
+			} else {
+				 setDisableDateFields(false);	
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.info(" Pattern is not correct " + e.getErrorMessage());
+		}
+		setHdnPackCodeId(String.valueOf(afinalPackDTO.getPackCodeSetID()));
+        setDlthdnPackIdValue(String.valueOf(afinalPackDTO.getPackCodeSetID()));
+	}
+
+	// update Pack Code data (overlay)
+	/**
+	 * Update existing pack code.
+	 */
+	public void updateExistingPackCode() {
+
+		PackCodeDelegate packCodeDelegate = null;
+
+		final String countryOfPromotion = getCountryValue();
+		final String promotion = getPromotionValue();
+		final String brandId = getBrandValue();
+		final String aPackCodeSetName = getPackcodevalue();
+		final String skuid = getProdId();
+		final String aDateActive = getFromdate();
+		final String aDateInActive = getTodate();
+		final String packCodeSetId = getHdnPackCodeId();
+
+		PackDTO iPackDTO = null;
+		CountryDTO icountryDTO = null;
+		PromotionDTO iPromotionDTO;
+		PackDTO oPackDTO = null;
+		BrandDTO iBrandDTO = null;
+
+		if (StringUtils.isNotBlank(aPackCodeSetName)
+			&& StringUtils.isNotBlank(skuid)	
+			&& StringUtils.isNotBlank(packCodeSetId)) {
+			
+			iPackDTO = new PackDTO();
+			icountryDTO = new CountryDTO();
+			iPromotionDTO = new PromotionDTO();
+			iBrandDTO = new BrandDTO();
+
+			
+				
+			  icountryDTO.setCountryID(Integer.parseInt(countryOfPromotion));
+			 iPackDTO.setCountry(icountryDTO);
+			
+			String[] aPromotionId = promotion.split(",");
+			
+			int	promoId = (Integer.parseInt(aPromotionId[0]));
+			
+			//int	productTypeId=(Integer.parseInt(promotion_id[1]));	
+			iPromotionDTO.setPromotionID(promoId);
+			
+			iPackDTO.setPromotion(iPromotionDTO);
+			
+			/*iPromotionDTO.setPromotionID(Integer.parseInt(promotion));
+			iPackDTO.setPromotion(iPromotionDTO);*/
+			iBrandDTO.setBrandID(Integer.parseInt(brandId));
+			 iPackDTO.setBrand(iBrandDTO);
+			
+			iPackDTO.setPackCodeSetName(aPackCodeSetName);
+			
+			ProductDTO productDTO = new ProductDTO();
+			productDTO.setProductId(skuid);
+			iPackDTO.setProduct(productDTO);
+			
+			iPackDTO.setStartDate(DateConversion.converterToDate(aDateActive));
+			iPackDTO.setEndDate(DateConversion.converterToDate(aDateInActive));
+			iPackDTO.setPackCodeSetID(Integer.parseInt(packCodeSetId));
+
+			packCodeDelegate = new PackCodeDelegate();
+			try {
+				oPackDTO = packCodeDelegate.updatePacks(iPackDTO);
+				if (oPackDTO != null &&  StringUtils.isNotEmpty(oPackDTO.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEPACKCODE_UPDATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage(
+							"packCodemanageForm:packCodeUpdateMessage", fm);
+				}
+				searchPacks();
+			} catch (UPCApplicationException e) {
+				LOGGER.error(" Error Occured in Updating Pack "
+						+ e.getMessage());
+				LOGGER.error(" Key ::: " + e.getErrorKey() + " Value ::: "
+						+ e.getErrorMessage());
+			}
+
+		}
+	}
+
+	// Delete PackCode(overlay)
+	/**
+	 * Delete pack code.
+	 */
+	public void deletePackCode() {
+
+		System.out.println(" DeletePackcode ");
+		PackCodeDelegate packCodeDelegate = null;
+
+		
+		final String promotion = getPromotionValue();
+		final String brandId = getBrandValue();
+		final String aPackCodeSetName = getPackcodevalue();
+		final String aDateActive = getFromdate();
+		final String aDateInActive = getTodate();
+		final String packCodeSetId = getHdnPackCodeId();
+		
+		final FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();  
+		HttpSession httpSession = request.getSession();
+		String userid = "";
+		if (null != httpSession.getAttribute("userid")) {
+			userid = httpSession.getAttribute("userid").toString();
+		}
+
+		PackDTO iPackDTO = null;
+		PackDTO oPackDTO = null;
+		PromotionDTO iPromotionDTO;
+		BrandDTO iBrandDTO = null;
+
+		if (StringUtils.isNotBlank(packCodeSetId)
+				&& StringUtils.isNotBlank(userid)) {
+
+			iPackDTO = new PackDTO();
+			iPromotionDTO = new PromotionDTO();
+			iBrandDTO = new BrandDTO();
+
+			// iBrandDTO.setCountryID(Integer.parseInt(countryOfPromotion));
+			iPromotionDTO.setPromotionID(Integer.parseInt(promotion.split(",")[0]));
+			iPackDTO.setPromotion(iPromotionDTO);
+			iBrandDTO.setBrandID(Integer.parseInt(brandId));
+			 iPackDTO.setBrand(iBrandDTO);
+			
+			iPackDTO.setPackCodeSetName(aPackCodeSetName);
+			iPackDTO.setStartDate(DateConversion.converterToDate(aDateActive));
+			iPackDTO.setEndDate(DateConversion.converterToDate(aDateInActive));
+			iPackDTO.setPackCodeSetID(Integer.parseInt(packCodeSetId));
+
+			packCodeDelegate = new PackCodeDelegate();
+			try {
+				oPackDTO = packCodeDelegate.deletePackList(iPackDTO, Integer.parseInt(userid));
+				if (oPackDTO != null
+						&& StringUtils.isNotEmpty(oPackDTO.getMessage())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEPACKCODE_DELETE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage(
+							"packCodemanageForm:packDeleteMessage", fm);
+				}
+				searchPacks();
+
+			} catch (UPCApplicationException e) {
+				LOGGER.error(" Error Occured in deleting brand "
+						+ e.getMessage());
+				LOGGER.error(" Key ::: " + e.getErrorKey() + " Value ::: "
+						+ e.getErrorMessage());
+			}
+		}
+	}
+
+	//populate brands in drop down while editing
+	/**
+	 * Populate brand.
+	 *
+	 * @param iPromotionId the i promotion id
+	 */
+	private void populateBrand(final String iPromotionId) {
+		try {
+			final String apromotionId = iPromotionId;
+			brandList.clear();
+			if (StringUtils.isNotBlank(apromotionId)) {
+				 
+				BrandsDTO brandsDTO = PackCodeDelegate.getBrands(apromotionId);
+
+				List<BrandDTO> aBrandList = brandsDTO.getaBrands();
+
+				//brandList.add(new SelectItem("0", "Select"));
+
+				if (aBrandList != null) {
+					for (int i = 0; i < aBrandList.size(); i++) {
+						SelectItem item = new SelectItem(aBrandList.get(i)
+								.getBrandID(), aBrandList.get(i)
+								.getBrandName());
+
+						brandList.add(item);
+					}
+				}
+			}
+		} catch (UPCApplicationException aUpcApplicationException) {
+			FacesMessage aFacesMessage = new FacesMessage(resourceBundle.getString(aUpcApplicationException.getErrorKey() + ".error"));
+			aFacesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("userManagement:system", aFacesMessage);
+		}
+		
+	}
+
+	/**
+	 * Gets the brand id.
+	 *
+	 * @return the brand id
+	 */
+	public String getBrandID() {
+		return brandID;
+	}
+
+	/**
+	 * Sets the brand id.
+	 *
+	 * @param iBrandID the new brand id
+	 */
+	public void setBrandID(final String iBrandID) {
+		this.brandID = iBrandID;
+	}
+
+	/**
+	 * Gets the hdn pack code id.
+	 *
+	 * @return the hdn pack code id
+	 */
+	public String getHdnPackCodeId() {
+		return hdnPackCodeId;
+	}
+
+	/**
+	 * Sets the hdn pack code id.
+	 *
+	 * @param iHdnPackCodeId the new hdn pack code id
+	 */
+	public void setHdnPackCodeId(final String iHdnPackCodeId) {
+		this.hdnPackCodeId = iHdnPackCodeId;
+	}
+
+	/**
+	 * Gets the on promo prod id input value.
+	 *
+	 * @return the on promo prod id input value
+	 */
+	public String getOnPromoProdIdInputValue() {
+		return onPromoProdIdInputValue;
+	}
+
+	/**
+	 * Sets the on promo prod id input value.
+	 *
+	 * @param iOnPromoProdIdInputValue the new on promo prod id input value
+	 */
+	public void setOnPromoProdIdInputValue(final String iOnPromoProdIdInputValue) {
+		this.onPromoProdIdInputValue = iOnPromoProdIdInputValue;
+	}
+
+	/**
+	 * Gets the hdncountry value.
+	 *
+	 * @return the hdncountry value
+	 */
+	public String getHdncountryValue() {
+		return hdncountryValue;
+	}
+
+	/**
+	 * Sets the hdncountry value.
+	 *
+	 * @param iHdncountryValue the new hdncountry value
+	 */
+	public void setHdncountryValue(final String iHdncountryValue) {
+		this.hdncountryValue = iHdncountryValue;
+	}
+
+	/**
+	 * Gets the hdnpromotion id value.
+	 *
+	 * @return the hdnpromotion id value
+	 */
+	public String getHdnpromotionIdValue() {
+		return hdnpromotionIdValue;
+	}
+
+	/**
+	 * Sets the hdnpromotion id value.
+	 *
+	 * @param iHdnpromotionIdValue the new hdnpromotion id value
+	 */
+	public void setHdnpromotionIdValue(final String iHdnpromotionIdValue) {
+		this.hdnpromotionIdValue = iHdnpromotionIdValue;
+	}
+
+	/**
+	 * Gets the dlthdn pack id value.
+	 *
+	 * @return the dlthdn pack id value
+	 */
+	public String getDlthdnPackIdValue() {
+		return dlthdnPackIdValue;
+	}
+
+	/**
+	 * Sets the dlthdn pack id value.
+	 *
+	 * @param iDlthdnPackIdValue the new dlthdn pack id value
+	 */
+	public void setDlthdnPackIdValue(final String iDlthdnPackIdValue) {
+		this.dlthdnPackIdValue = iDlthdnPackIdValue;
+	}
+
+	/**
+	 * Gets the current page no.
+	 *
+	 * @return the current page no
+	 */
+	public int getCurrentPageNo() {
+		return currentPageNo;
+	}
+
+	/**
+	 * Sets the current page no.
+	 *
+	 * @param iCurrentPageNo the new current page no
+	 */
+	public void setCurrentPageNo(final int iCurrentPageNo) {
+		this.currentPageNo = iCurrentPageNo;
+	}
+
+	public boolean isDisableDateFields() {
+		return disableDateFields;
+	}
+
+	public void setDisableDateFields(boolean disableDateFields) {
+		this.disableDateFields = disableDateFields;
+	}
+}

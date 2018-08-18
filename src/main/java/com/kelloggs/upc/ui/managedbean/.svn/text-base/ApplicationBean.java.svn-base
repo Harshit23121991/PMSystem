@@ -1,0 +1,141 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.CountryDTO;
+import com.kelloggs.upc.common.dto.RoleDTO;
+import com.kelloggs.upc.common.dto.UserRolesDTO;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.delegator.GenerateCodeDelegator;
+import com.kelloggs.upc.ui.delegator.SignInDelegate;
+
+/**
+ * The Class ApplicationBean.
+ */
+@ManagedBean(name = "ApplicationBean")
+@ApplicationScoped
+public class ApplicationBean implements Serializable {
+	
+	/** The Constant LOGGER. */
+	static final Logger LOGGER = Logger.getLogger(ApplicationBean.class);
+	
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L; 
+	 
+	/**
+	 * Instantiates a new application bean.
+	 */
+	public ApplicationBean() {
+		super();
+	}
+
+	/**
+	 * Inits the.
+	 */
+	@PostConstruct
+	public void init() {
+
+		getCountries();
+		getUserRoles();
+		getUserRolesMap();
+
+	}
+
+	// @ManagedProperty(value = "#{countries}")
+	/** The countries. */
+	private List<CountryDTO> countries;
+
+	// @ManagedProperty(value = "#{userRoles}")
+	/** The user roles. */
+	private UserRolesDTO userRoles;
+
+	// @ManagedProperty(value = "#{userRolesMap}")
+	/** The user roles map. */
+	private Map<Short, RoleDTO> userRolesMap = new HashMap<Short, RoleDTO>();
+
+	/**
+	 * Gets the countries.
+	 *
+	 * @return the countries
+	 */
+	public List<CountryDTO> getCountries() {
+		if (countries == null) {
+			try {
+				countries = GenerateCodeDelegator.getCountries()
+						.getaCountries();
+			} catch (UPCApplicationException e) {
+				LOGGER.error(e);
+			}
+		}
+		return countries;
+	}
+
+	/**
+	 * Sets the countries.
+	 *
+	 * @param iCountries the new countries
+	 */
+	public void setCountries(final List<CountryDTO> iCountries) {
+		this.countries = iCountries;
+	}
+
+	/**
+	 * Gets the user roles.
+	 *
+	 * @return the user roles
+	 */
+	public UserRolesDTO getUserRoles() {
+		try {
+			if (userRoles == null) {
+				userRoles = SignInDelegate.getUserRoles();
+			}
+		} catch (UPCApplicationException e) {
+			e.printStackTrace();
+		}
+		return userRoles;
+	}
+
+	/**
+	 * Gets the user roles map.
+	 *
+	 * @return the user roles map
+	 */
+	public Map<Short, RoleDTO> getUserRolesMap() {
+
+		List<RoleDTO> userRoleDTOList = userRoles.getUserRole();
+
+		for (RoleDTO userRole : userRoleDTOList) {
+			userRolesMap.put((short) userRole.getRoleId(), userRole);
+		}
+
+		return userRolesMap;
+	}
+
+	/**
+	 * Sets the user roles map.
+	 *
+	 * @param iUserRolesMap the i user roles map
+	 */
+	public void setUserRolesMap(final Map<Short, RoleDTO> iUserRolesMap) {
+		this.userRolesMap = iUserRolesMap;
+	}
+
+	/**
+	 * Sets the user roles.
+	 *
+	 * @param iUserRoles the new user roles
+	 */
+	public void setUserRoles(final UserRolesDTO iUserRoles) {
+		this.userRoles = iUserRoles;
+	}
+
+}

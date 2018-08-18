@@ -1,0 +1,41 @@
+package com.kelloggs.upc.common.dto;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+
+/**
+ * The Class CountriesDTO.
+ */
+@XmlRootElement(name = "countries", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("countries")
+public class CountriesDTO {
+	
+	
+	/** The a countries. */
+	private List<CountryDTO> aCountries;
+		
+	/**
+	 * Gets the a countries.
+	 *
+	 * @return the a countries
+	 */
+	@XmlElement(name = "Country")
+	public List<CountryDTO> getaCountries() {
+		return aCountries;
+	}
+
+	/**
+	 * Sets the a countries.
+	 *
+	 * @param iCountries the new a countries
+	 */
+	public void setaCountries(final List<CountryDTO> iCountries) {
+		this.aCountries = iCountries;
+	}
+}

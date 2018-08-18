@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="cancel::#pages#Home.xhtml" NAME="output"
+    PATH="/pages/Home.xhtml" TARGET="rules:#pages#Home.xhtml"
+    TITLE="cancel" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:1" PATH="*" SHAPE="32,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:1" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="searchAgain::#pages#CompanySearch.xhtml"
+    NAME="output" PATH="/pages/CompanySearch.xhtml"
+    TARGET="rules:#pages#CompanySearch.xhtml" TITLE="searchAgain" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#SignUp.xhtml"
+  PATH="/pages/SignUp.xhtml" SHAPE="32,241,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#SignUp.xhtml:0" NAME="item"
+   PATH="/pages/SignUp.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#pages#CompanySearch.xhtml"
+    NAME="output" PATH="/pages/CompanySearch.xhtml"
+    TARGET="rules:#pages#CompanySearch.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#SignIn.xhtml"
+  PATH="/pages/SignIn.xhtml" SHAPE="32,353,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#SignIn.xhtml:0" NAME="item"
+   PATH="/pages/SignIn.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#pages#CompanySearch.xhtml"
+    NAME="output" PATH="/pages/CompanySearch.xhtml"
+    TARGET="rules:#pages#CompanySearch.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#Home.xhtml" PATH="/pages/Home.xhtml"
+  SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#CompanySearch.xhtml"
+  PATH="/pages/CompanySearch.xhtml" SHAPE="240,145,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#CompanySearch.xhtml:0" NAME="item"
+   PATH="/pages/CompanySearch.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#pages#CompanyResults.xhtml"
+    NAME="output" PATH="/pages/CompanyResults.xhtml"
+    TARGET="rules:#pages#CompanyResults.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#CompanyResults.xhtml"
+  PATH="/pages/CompanyResults.xhtml" SHAPE="480,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#CompanyResults.xhtml:0" NAME="item"
+   PATH="/pages/CompanyResults.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#pages#ValidateCompany.xhtml"
+    NAME="output" PATH="/pages/ValidateCompany.xhtml"
+    TARGET="rules:#pages#ValidateCompany.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#StoreAccess.xhtml"
+  PATH="/pages/StoreAccess.xhtml" SHAPE="240,481,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#ValidateCompany.xhtml"
+  PATH="/pages/ValidateCompany.xhtml" SHAPE="688,145,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#ValidateCompany.xhtml:0" NAME="item"
+   PATH="/pages/ValidateCompany.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#pages#StoreAccess.xhtml"
+    NAME="output" PATH="/pages/StoreAccess.xhtml"
+    TARGET="rules:#pages#StoreAccess.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+</PROCESS>

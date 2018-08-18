@@ -1,0 +1,327 @@
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.List;
+
+import com.kelloggs.upc.common.dto.UserDTO;
+
+/**
+ * The Class BrandManagementVO.
+ */
+public class BrandManagementVO {
+
+	/** The current brandid. */
+	private String currentBrandid = "";
+
+	/** The brands list. */
+	private List<UserDTO> brandsList = null;
+
+	/** The current type. */
+	private String currentType = "";
+
+	/** The country value. */
+	private String countryValue = "";
+
+	/** The brand name. */
+	private String brandName;
+
+	/** The country of promotion. */
+	private String countryOfPromotion;
+
+	/** The brand value. */
+	private String brandValue;
+
+	/** The brand code value. */
+	private String brandCodeValue;
+
+	/** The brand code. */
+	private String brandCode;
+
+	/** The header. */
+	private String header;
+
+	/** The brand. */
+	private String brand;
+
+	/** The country id. */
+	private int countryID;
+
+	/** The message. */
+	private String message;
+	
+	/** The brand id. */
+	private int brandID;
+	
+	/** The country search value. */
+	private String countrySearchValue = "";
+
+	/**
+	 * Gets the country search value.
+	 *
+	 * @return the country search value
+	 */
+	public String getCountrySearchValue() {
+		return countrySearchValue;
+	}
+
+	/**
+	 * Sets the country search value.
+	 *
+	 * @param iCountrySearchValue the new country search value
+	 */
+	public void setCountrySearchValue(final String iCountrySearchValue) {
+		this.countrySearchValue = iCountrySearchValue;
+	}
+
+	/**
+	 * Gets the brand id.
+	 *
+	 * @return the brand id
+	 */
+	public int getBrandID() {
+		return brandID;
+	}
+
+	/**
+	 * Sets the brand id.
+	 *
+	 * @param iBrandID the new brand id
+	 */
+	public void setBrandID(final int iBrandID) {
+		this.brandID = iBrandID;
+	}
+
+	/**
+	 * Gets the country id.
+	 *
+	 * @return the country id
+	 */
+	public int getCountryID() {
+		return countryID;
+	}
+
+	/**
+	 * Sets the country id.
+	 *
+	 * @param iCountryID the new country id
+	 */
+	public void setCountryID(final int iCountryID) {
+		this.countryID = iCountryID;
+	}
+
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message.
+	 *
+	 * @param iMessage the new message
+	 */
+	public void setMessage(final String iMessage) {
+		this.message = iMessage;
+	}
+
+	/**
+	 * Gets the brand.
+	 *
+	 * @return the brand
+	 */
+	public String getBrand() {
+		return brand;
+	}
+
+	/**
+	 * Sets the brand.
+	 *
+	 * @param iBrand the new brand
+	 */
+	public void setBrand(final String iBrand) {
+		this.brand = iBrand;
+	}
+
+	/**
+	 * Gets the current brandid.
+	 *
+	 * @return the current brandid
+	 */
+	public String getCurrentBrandid() {
+		return currentBrandid;
+	}
+
+	/**
+	 * Sets the current brandid.
+	 *
+	 * @param iCurrentBrandid the new current brandid
+	 */
+	public void setCurrentBrandid(final String iCurrentBrandid) {
+		this.currentBrandid = iCurrentBrandid;
+	}
+
+	/**
+	 * Gets the brands list.
+	 *
+	 * @return the brands list
+	 */
+	public List<UserDTO> getBrandsList() {
+		return brandsList;
+	}
+
+	/**
+	 * Sets the brands list.
+	 *
+	 * @param iBrandsList the new brands list
+	 */
+	public void setBrandsList(final List<UserDTO> iBrandsList) {
+		this.brandsList = iBrandsList;
+	}
+
+	/**
+	 * Gets the current type.
+	 *
+	 * @return the current type
+	 */
+	public String getCurrentType() {
+		return currentType;
+	}
+
+	/**
+	 * Sets the current type.
+	 *
+	 * @param iCurrentType the new current type
+	 */
+	public void setCurrentType(final String iCurrentType) {
+		this.currentType = iCurrentType;
+	}
+
+	/**
+	 * Gets the country value.
+	 *
+	 * @return the country value
+	 */
+	public String getCountryValue() {
+		return countryValue;
+	}
+
+	/**
+	 * Sets the country value.
+	 *
+	 * @param iCountryValue the new country value
+	 */
+	public void setCountryValue(final String iCountryValue) {
+		this.countryValue = iCountryValue;
+	}
+
+	/**
+	 * Gets the brand name.
+	 *
+	 * @return the brand name
+	 */
+	public String getBrandName() {
+		return brandName;
+	}
+
+	/**
+	 * Sets the brand name.
+	 *
+	 * @param iBrandName the new brand name
+	 */
+	public void setBrandName(final String iBrandName) {
+		this.brandName = iBrandName;
+	}
+
+	/**
+	 * Gets the country of promotion.
+	 *
+	 * @return the country of promotion
+	 */
+	public String getCountryOfPromotion() {
+		return countryOfPromotion;
+	}
+
+	/**
+	 * Sets the country of promotion.
+	 *
+	 * @param iCountryOfPromotion the new country of promotion
+	 */
+	public void setCountryOfPromotion(final String iCountryOfPromotion) {
+		this.countryOfPromotion = iCountryOfPromotion;
+	}
+
+	/**
+	 * Gets the brand value.
+	 *
+	 * @return the brand value
+	 */
+	public String getBrandValue() {
+		return brandValue;
+	}
+
+	/**
+	 * Sets the brand value.
+	 *
+	 * @param iBrandValue the new brand value
+	 */
+	public void setBrandValue(final String iBrandValue) {
+		this.brandValue = iBrandValue;
+	}
+
+	/**
+	 * Gets the brand code value.
+	 *
+	 * @return the brand code value
+	 */
+	public String getBrandCodeValue() {
+		return brandCodeValue;
+	}
+
+	/**
+	 * Sets the brand code value.
+	 *
+	 * @param iBrandCodeValue the new brand code value
+	 */
+	public void setBrandCodeValue(final String iBrandCodeValue) {
+		this.brandCodeValue = iBrandCodeValue;
+	}
+
+	/**
+	 * Gets the brand code.
+	 *
+	 * @return the brand code
+	 */
+	public String getBrandCode() {
+		return brandCode;
+	}
+
+	/**
+	 * Sets the brand code.
+	 *
+	 * @param iBrandCode the new brand code
+	 */
+	public void setBrandCode(final String iBrandCode) {
+		this.brandCode = iBrandCode;
+	}
+
+	/**
+	 * Gets the header.
+	 *
+	 * @return the header
+	 */
+	public String getHeader() {
+		return header;
+	}
+
+	/**
+	 * Sets the header.
+	 *
+	 * @param iHeader the new header
+	 */
+	public void setHeader(final String iHeader) {
+		this.header = iHeader;
+	}
+
+}

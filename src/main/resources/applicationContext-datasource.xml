@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<bean id="sbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:jboss/datasources/PMSystem" />
+		<!-- <property name="resourceRef" value="true" /> -->
+	</bean>
+	
+	<tx:annotation-driven />
+	<bean id="sessionFactory" name="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
+		lazy-init="false">
+		<property name="dataSource" ref="sbDataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.kelloggs.upc.common.domain.Country</value>
+				<value>com.kelloggs.upc.common.domain.User</value>
+				<value>com.kelloggs.upc.common.domain.Brand</value>
+				<value>com.kelloggs.upc.common.domain.Pack</value>
+				<value>com.kelloggs.upc.common.domain.Promotion</value>
+				<value>com.kelloggs.upc.common.domain.Batch</value>
+				<value>com.kelloggs.upc.common.domain.ApiAccess</value>
+				<value>com.kelloggs.upc.common.domain.CustomerRedemption</value>
+				<value>com.kelloggs.upc.common.domain.CustomerRedemptionPk</value>
+				<value>com.kelloggs.upc.common.domain.PromotionBrandMapping</value>
+				<value>com.kelloggs.upc.common.domain.PromotionBrandMappingPk
+				</value>
+				<value>com.kelloggs.upc.common.domain.Product</value>
+				<value>com.kelloggs.upc.common.domain.ProductSku</value>
+				<value>com.kelloggs.upc.common.domain.ProductType</value>
+				<value>com.kelloggs.upc.common.domain.Menu</value>
+				<value>com.kelloggs.upc.common.domain.OperationLog</value>
+				<value>com.kelloggs.upc.common.domain.UserRole</value>
+			</list>
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.max_fetch_depth">2</prop>
+				<prop key="hibernate.default_batch_fetch_size">8</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				<prop key="hibernate.jdbc.batch_versioned_data">20</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.jdbc.fetch_size">100</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>

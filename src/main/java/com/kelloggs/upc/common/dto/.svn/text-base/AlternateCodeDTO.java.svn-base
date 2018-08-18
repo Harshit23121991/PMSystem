@@ -1,0 +1,36 @@
+package com.kelloggs.upc.common.dto;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+
+/**
+ * The Class AlternateCodeDTO.
+ */
+@XmlRootElement(name = "alternateCode", namespace = "com.kelloggs.upc.common.dto")
+@XStreamAlias("alternateCode")
+public class AlternateCodeDTO {
+
+	/** The alternate code. */
+	private String alternateCode;
+
+	/**
+	 * Gets the alternate code.
+	 *
+	 * @return the alternate code
+	 */
+	public String getAlternateCode() {
+		return alternateCode;
+	}
+
+	/**
+	 * Sets the alternate code.
+	 *
+	 * @param iAlternateCode the new alternate code
+	 */
+	public void setAlternateCode(final String iAlternateCode) {
+		this.alternateCode = iAlternateCode;
+	}
+
+}

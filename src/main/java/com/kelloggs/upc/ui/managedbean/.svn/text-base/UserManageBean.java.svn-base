@@ -1,0 +1,513 @@
+/*
+ * 
+ */
+package com.kelloggs.upc.ui.managedbean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.kelloggs.upc.common.dto.UserDTO;
+import com.kelloggs.upc.common.dto.UserDTOs;
+import com.kelloggs.upc.ui.common.UPCApplicationException;
+import com.kelloggs.upc.ui.common.UPCConstants;
+import com.kelloggs.upc.ui.delegator.UserManagementDelgate;
+
+/**
+ * The Class UserManageBean.
+ */
+@ManagedBean(name = "usermanageBean")
+@ViewScoped
+public class UserManageBean extends BaseBean {
+
+	
+	// =================================================
+	// Class Variables
+	// =================================================
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
+	
+	/** The Constant LOGGER. */
+	static final Logger LOGGER = Logger.getLogger(UserManageBean.class);
+	
+	
+	// =================================================
+	// Instance Variables
+	// =================================================
+	/** The user list. */
+	private List<UserDTO> userList = new ArrayList<UserDTO>();
+	
+	/** The hidden user id value. */
+	private String hiddenUserIdValue = "";
+	
+	/** The user name value. */
+	private String userNameValue = "";
+	
+	/** The user id value. */
+	private String loginId = "";
+	
+	/** The password value. */
+	private String passwordValue = "";
+	
+	/** The confirm password value. */
+	private String confirmPasswordValue = "";
+	
+	/** The role value. */
+	private String roleValue = "";
+	
+	/** The enable value. */
+	private String enableValue = "";
+	
+	/** The search user value. */
+	private String searchUserValue = "";
+	// private static ResourceBundle resourceBundle = null;
+	/** The duplicate name. */
+	private boolean duplicateName = false;
+
+	static {
+		LOGGER.info(" Intialize Resource Bundle once upon class load");
+	}
+
+
+	// =================================================
+	// Constructors
+	// =================================================
+	/**
+	 * Instantiates a new user manage bean.
+	 */
+	public UserManageBean() {
+		
+		LOGGER.debug(" Entered UserManageBean constructor");
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.kelloggs.upc.ui.managedbean.BaseBean#init()
+	 */
+	@PostConstruct
+    public void init() {   
+		
+		searchAllUser();
+		
+	}
+	
+
+	/**
+	 * Creates the new user.
+	 */
+	public void createNewUser() {
+
+		LOGGER.debug(" Entered createNewUser service");
+		try {
+			UserManagementDelgate userManagementDelgate = null;
+			final String username = getUserNameValue();
+			final String password = getPasswordValue();
+			final String roleid = getRoleValue();
+			final String enabled = getEnableValue();
+			final String userid = getLoginId();
+			UserDTO iuserDTO = null;
+			UserDTO ouserDTO = null;
+			if (StringUtils.isNotBlank(username)
+					&& StringUtils.isNotBlank(password)
+					&& StringUtils.isNotBlank(roleid)
+					&& StringUtils.isNotBlank(enabled)) {
+
+				iuserDTO = new UserDTO();
+
+				iuserDTO.setUserName(username);
+				iuserDTO.setLoginID(userid);
+				iuserDTO.setUserPassword(password);
+				iuserDTO.setUserRoleID(Integer.parseInt(roleid));
+				iuserDTO.setEnabled(("1".equals(enabled)));
+				userManagementDelgate = new UserManagementDelgate();
+				ouserDTO = userManagementDelgate.createUser(iuserDTO);
+				if (ouserDTO != null) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEUSER_CREATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage("userManagement:createUser", fm);
+				}
+				searchAllUser();
+
+				 setUserNameValue("");
+				   setLoginId("");
+				   setPasswordValue("");
+				   setConfirmPasswordValue("");
+				   setRoleValue("");
+				   setEnableValue("");
+			}
+		} catch (UPCApplicationException e) {
+			FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e.getErrorKey() + ".error"));
+			fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("pageError_userCreateForm", fm);
+			LOGGER.error(" Error Occured in creating user ", e);
+		}
+  
+		LOGGER.debug(" Exsited from createNewUser service");
+	}
+
+	
+	 /**
+     * <p> <code>UserManageBean.populateExistingUser</code> method uses  {@link  com.kelloggs.upc.common.dto.UserDTO } data transfer
+     * object and set the value to backing bean properties for respective users</p>
+     *
+     * <pre>
+     * userDTO.isEnabled()  is true= 1
+     * userDTO.isEnabled()  is false = 0
+     * </pre>
+     *
+     * @param userDTO  It accepts {@link  com.kelloggs.upc.common.dto.UserDTO }  
+     * @since 1.0.0
+     */
+	public void populateExistingUser(final UserDTO userDTO) {
+		LOGGER.debug(" Entered populateExistingUser service");
+		setHiddenUserIdValue(String.valueOf(userDTO.getUserID()));
+		setUserNameValue(userDTO.getUserName());
+		setLoginId(userDTO.getLoginID());
+		setPasswordValue(userDTO.getUserPassword());
+		setConfirmPasswordValue(userDTO.getUserPassword());
+		setRoleValue(String.valueOf(userDTO.getUserRoleID()));
+		if (userDTO.isEnabled()) {
+			setEnableValue("1");
+		} else {
+			setEnableValue("0");
+		}
+		LOGGER.debug(" Exsited from populateExistingUser service");
+	}
+
+	/**
+	 * Update existing user.
+	 */
+	public void updateExistingUser() {
+		LOGGER.debug(" Entered updateExistingUser service");
+		try {
+			UserManagementDelgate userManagementDelgate = null;
+			final String username = getUserNameValue();
+			final String password = getPasswordValue();
+			final String roleid = getRoleValue();
+			final String enabled = getEnableValue();
+			final String userid = getHiddenUserIdValue();
+			final String loginId = getLoginId();
+			UserDTO userDTO = null;
+			if (StringUtils.isNotBlank(username)
+					&& StringUtils.isNotBlank(password)
+					&& StringUtils.isNotBlank(roleid)
+					&& StringUtils.isNotBlank(enabled)
+					&& StringUtils.isNotBlank(userid)
+					&& StringUtils.isNotBlank(loginId)) {
+
+				userDTO = new UserDTO();
+				userDTO.setUserID(Integer.parseInt(userid));
+				userDTO.setUserName(username);
+				userDTO.setUserPassword(password);
+				userDTO.setUserRoleID(Integer.parseInt(roleid));
+				userDTO.setEnabled(("1".equals(enabled)));
+				userDTO.setLoginID(loginId);
+				userManagementDelgate = new UserManagementDelgate();
+				UserDTO userDTO2 = userManagementDelgate.updateUser(userDTO);
+				if (userDTO2 != null && StringUtils.isNotBlank(userDTO2.getLoginID())) {
+					FacesMessage fm = new FacesMessage(UPCConstants.UPCMessages.MANAGEUSER_UPDATE_SUCCESS.getMsg());
+					fm.setSeverity(FacesMessage.SEVERITY_INFO);
+					FacesContext.getCurrentInstance().addMessage("userManagement:updated", fm);
+				}
+				searchAllUser();
+			}
+		} catch (UPCApplicationException e) {
+			LOGGER.error(" Error Occured in creating user " + e.getMessage());
+			FacesMessage fm = new FacesMessage(errorResourceBundle.getString(e.getErrorKey() + ".error"));
+			fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext.getCurrentInstance().addMessage("pageError_userCreateForm", fm);
+		}
+		LOGGER.debug(" Exsited from updateExistingUser service");
+	}
+
+	/**
+	 * Search all user.
+	 */
+	public void searchAllUser() {
+		LOGGER.debug(" Entered searchAllUser service");
+		UserManagementDelgate userManagementDelgate = null;
+		UserDTO iuserDTO = null;
+		UserDTOs oUserDTOs = null;
+		
+		try {
+				userManagementDelgate = new UserManagementDelgate();
+				iuserDTO = new UserDTO();
+				iuserDTO.setUserName(searchUserValue);
+				oUserDTOs = userManagementDelgate.searchUser(iuserDTO);
+				setUserList(oUserDTOs.getUser());
+			
+		} catch (UPCApplicationException e) {
+			
+			if (null != userList) {
+				userList.clear();
+			}
+					
+		}
+		LOGGER.debug(" Exsited from searchAllUser service");
+	}
+
+	/**
+	 * Search user by name.
+	 *
+	 * @param event the event
+	 */
+	public void searchUserByName(final ValueChangeEvent event) {
+		LOGGER.debug(" Entered searchUserByName service");
+		String userIputValue = ((String) event.getNewValue());
+		UserManagementDelgate userManagementDelgate = null;
+		UserDTO iuserDTO = null;
+		UserDTOs oUserDTOs = null;
+		try {
+			if (StringUtils.isNotBlank(userIputValue)) {
+				userManagementDelgate = new UserManagementDelgate();
+				iuserDTO = new UserDTO();
+				iuserDTO.setUserName(userIputValue);
+				oUserDTOs = userManagementDelgate.searchUser(iuserDTO);
+				setUserList(oUserDTOs.getUser());
+			} else {
+				setSearchUserValue(userIputValue); 
+				searchAllUser();
+			}
+		} catch (UPCApplicationException e) {
+
+			LOGGER.debug(" UPCApplicationException ", e);
+		}
+		LOGGER.debug(" Exsited from searchUserByName service");
+	}
+
+	/**
+	 * Checks if is duplicate user.
+	 *
+	 * @return the string
+	 */
+	public String isDuplicateUser() {
+
+		LOGGER.info(" Entered isDuplicateUser method");
+		String duplicate = "";
+		String userIputValue = getUserNameValue();
+		UserManagementDelgate userManagementDelgate = null;
+		UserDTO iuserDTO = null;
+		UserDTOs oUserDTOs = null;
+		boolean aDuplicateName = false;
+		try {
+			if (StringUtils.isNotBlank(userIputValue)) {
+				userManagementDelgate = new UserManagementDelgate();
+				iuserDTO = new UserDTO();
+				iuserDTO.setUserName(userIputValue);
+				oUserDTOs = userManagementDelgate.searchUser(iuserDTO);
+				if (oUserDTOs != null && oUserDTOs.getUser() != null
+						&& oUserDTOs.getUser().size() > 0) {
+					UserDTO userDTO = oUserDTOs.getUser().get(0);
+					if (userDTO.getUserName().equalsIgnoreCase(userIputValue)) {
+						aDuplicateName = true;
+					}
+				}
+
+			}
+		} catch (UPCApplicationException e) {
+
+			LOGGER.debug(" UPCApplicationException ", e);
+		}
+
+		if (aDuplicateName) {
+			duplicate = "User Name is already present in our system";
+			setDuplicateName(true);
+		} else {
+			duplicate = "";
+			setDuplicateName(false);
+		}
+		LOGGER.info(" Existed isDuplicateUser method");
+		return duplicate;
+	}
+
+	/**
+	 * Gets the user list.
+	 *
+	 * @return the user list
+	 */
+	public List<UserDTO> getUserList() {
+		return userList;
+	}
+
+	/**
+	 * Sets the user list.
+	 *
+	 * @param iUserList the new user list
+	 */
+	public void setUserList(final List<UserDTO> iUserList) {
+		this.userList = iUserList;
+	}
+
+	/**
+	 * Gets the role value.
+	 *
+	 * @return the role value
+	 */
+	public String getRoleValue() {
+		return roleValue;
+	}
+
+	/**
+	 * Sets the role value.
+	 *
+	 * @param iRoleValue the new role value
+	 */
+	public void setRoleValue(final String iRoleValue) {
+		this.roleValue = iRoleValue;
+	}
+
+	/**
+	 * Gets the user name value.
+	 *
+	 * @return the user name value
+	 */
+	public String getUserNameValue() {
+		return userNameValue;
+	}
+
+	/**
+	 * Sets the user name value.
+	 *
+	 * @param iUserNameValue the new user name value
+	 */
+	public void setUserNameValue(final String iUserNameValue) {
+		this.userNameValue = iUserNameValue;
+	}
+
+	/**
+	 * Gets the password value.
+	 *
+	 * @return the password value
+	 */
+	public String getPasswordValue() {
+		return passwordValue;
+	}
+
+	/**
+	 * Sets the password value.
+	 *
+	 * @param iPasswordValue the new password value
+	 */
+	public void setPasswordValue(final String iPasswordValue) {
+		this.passwordValue = iPasswordValue;
+	}
+
+	/**
+	 * Gets the confirm password value.
+	 *
+	 * @return the confirm password value
+	 */
+	public String getConfirmPasswordValue() {
+		return confirmPasswordValue;
+	}
+
+	/**
+	 * Sets the confirm password value.
+	 *
+	 * @param iConfirmPasswordValue the new confirm password value
+	 */
+	public void setConfirmPasswordValue(final String iConfirmPasswordValue) {
+		this.confirmPasswordValue = iConfirmPasswordValue;
+	}
+
+	/**
+	 * Gets the enable value.
+	 *
+	 * @return the enable value
+	 */
+	public String getEnableValue() {
+		return enableValue;
+	}
+
+	/**
+	 * Sets the enable value.
+	 *
+	 * @param iEnableValue the new enable value
+	 */
+	public void setEnableValue(final String iEnableValue) {
+		this.enableValue = iEnableValue;
+	}
+
+	/**
+	 * Gets the search user value.
+	 *
+	 * @return the search user value
+	 */
+	public String getSearchUserValue() {
+		return searchUserValue;
+	}
+
+	/**
+	 * Sets the search user value.
+	 *
+	 * @param iSearchUserValue the new search user value
+	 */
+	public void setSearchUserValue(final String iSearchUserValue) {
+		this.searchUserValue = iSearchUserValue;
+	}
+
+	/**
+	 * Gets the user id value.
+	 *
+	 * @return the user id value
+	 */
+	public String getLoginId() {
+		return loginId;
+	}
+
+	/**
+	 * Sets the user id value.
+	 *
+	 * @param iUserIdValue the new user id value
+	 */
+	public void setLoginId(final String iUserIdValue) {
+		this.loginId = iUserIdValue;
+	}
+
+	/**
+	 * Checks if is duplicate name.
+	 *
+	 * @return true, if is duplicate name
+	 */
+	public boolean isDuplicateName() {
+		return duplicateName;
+	}
+
+	/**
+	 * Sets the duplicate name.
+	 *
+	 * @param iDuplicateName the new duplicate name
+	 */
+	public void setDuplicateName(final boolean iDuplicateName) {
+		this.duplicateName = iDuplicateName;
+	}
+
+	/**
+	 * Gets the hidden user id value.
+	 *
+	 * @return the hidden user id value
+	 */
+	public String getHiddenUserIdValue() {
+		return hiddenUserIdValue;
+	}
+
+	/**
+	 * Sets the hidden user id value.
+	 *
+	 * @param iHiddenUserIdValue the new hidden user id value
+	 */
+	public void setHiddenUserIdValue(final String iHiddenUserIdValue) {
+		this.hiddenUserIdValue = iHiddenUserIdValue;
+	}
+
+	
+}
